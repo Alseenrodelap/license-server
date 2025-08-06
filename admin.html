@@ -165,7 +165,7 @@
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="expires-at">Vervaldatum</label>
-                                <input type="datetime-local" id="expires-at" name="expires-at">
+                                <input type="date" id="expires-at" name="expires-at">
                                 <div class="form-help">Leeg laten voor permanente licentie</div>
                             </div>
                             <div class="form-field">
@@ -211,12 +211,7 @@
                     <button class="filter-btn" data-filter="active">Actief</button>
                     <button class="filter-btn" data-filter="inactive">Inactief</button>
                     <button class="filter-btn" data-filter="expired">Verlopen</button>
-                    <button class="clear-filters-btn" onclick="clearFilters()">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                        Wis filters
-                    </button>
+                    <button class="clear-filters-btn" onclick="clearFilters()">Wis filters</button>
                 </div>
             </div>
 
@@ -242,11 +237,10 @@
                                 <th class="sortable" data-column="license_key">Licentie Sleutel</th>
                                 <th class="sortable" data-column="license_type">Type</th>
                                 <th class="sortable" data-column="customer_name">Klant</th>
-                                <th class="sortable" data-column="customer_email">E-mail</th>
                                 <th class="sortable" data-column="status">Status</th>
                                 <th class="sortable" data-column="created_at">Aangemaakt</th>
                                 <th class="sortable" data-column="expires_at">Verloopt</th>
-                                <th class="sortable" data-column="last_checked">Laatst Gecontroleerd</th>
+                                <th class="sortable" data-column="last_checked">Last check</th>
                                 <th>Acties</th>
                             </tr>
                         </thead>
@@ -547,7 +541,7 @@
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="edit-expires-at">Vervaldatum</label>
-                                <input type="datetime-local" id="edit-expires-at" name="expires-at">
+                                <input type="date" id="edit-expires-at" name="expires-at">
                             </div>
                             <div class="form-field">
                                 <label for="edit-notes">Notities</label>
@@ -668,7 +662,20 @@
                     sortTable(this.dataset.column);
                 });
             });
+
+            const licenseTypeSelect = document.getElementById('license-type');
+            const expiresAtInput    = document.getElementById('expires-at');
+            
+            licenseTypeSelect.addEventListener('change', function () {
+                if (this.value === 'trial') {
+                    const d = new Date();
+                    d.setDate(d.getDate() + 30);
+                    // Datumveld verwacht YYYY-MM-DD
+                    expiresAtInput.value = d.toISOString().slice(0, 10);
+                }
+            });
         });
+
 
         // Show/Hide sections
         function showSection(section) {
@@ -713,13 +720,22 @@
                 action: 'admin',
                 sub_action: 'get_license_types'
             });
-            
+        
             if (result && result.license_types) {
-                licenseTypes = result.license_types;
-                populateLicenseTypeSelects();
-                renderLicenseTypesEditor();
+                // Zorg dat we altijd een object {key: name} krijgen
+                if (Array.isArray(result.license_types)) {
+                    licenseTypes = Object.fromEntries(
+                        result.license_types.map(t => [t.key ?? t.id, t.name])
+                    );
+                } else {
+                    licenseTypes = result.license_types;
+                }
+        
+                populateLicenseTypeSelects();   // dropdowns vullen
+                renderLicenseTypesEditor();     // editorpanelen vullen
             }
         }
+
 
         function populateLicenseTypeSelects() {
             const selects = ['license-type', 'edit-license-type'];
@@ -767,13 +783,16 @@
             if (key && !licenseTypes[key]) {
                 licenseTypes[key] = key.charAt(0).toUpperCase() + key.slice(1);
                 renderLicenseTypesEditor();
+                populateLicenseTypeSelects();   // dropdowns direct verversen
             }
         }
+
 
         function removeLicenseType(key) {
             if (confirm('Weet je zeker dat je dit licentietype wilt verwijderen?')) {
                 delete licenseTypes[key];
                 renderLicenseTypesEditor();
+                populateLicenseTypeSelects();   // dropdowns direct verversen
             }
         }
 
@@ -824,6 +843,22 @@
             const form = e.target;
             const formData = new FormData(form);
             
+            let expDate = formData.get('expires-at');          // YYYY-MM-DD of ''
+            const isTrial = formData.get('license-type') === 'trial';
+            
+            if (!expDate && isTrial) {
+                // Trial + leeg veld  ⇒  vandaag +30
+                const d = new Date();
+                d.setDate(d.getDate() + 30);
+                expDate = d.toISOString().slice(0, 10);
+            }
+            
+            let expires_at = null;
+            if (expDate) {
+                // plak 23:59:00 eraan in lokale tijd (ISO zonder Z zodat PHP het als lokaal leest)
+                expires_at = `${expDate} 23:59:00`;
+            }
+            
             const licenseData = {
                 action: 'admin',
                 sub_action: 'create',
@@ -831,7 +866,7 @@
                 license_type: formData.get('license-type'),
                 customer_name: formData.get('customer-name'),
                 customer_email: formData.get('customer-email'),
-                expires_at: formData.get('expires-at') || null,
+                expires_at,
                 notes: formData.get('notes')
             };
             
@@ -901,6 +936,11 @@
             const form = e.target;
             const formData = new FormData(form);
             
+            let expDate = formData.get('expires-at');          // YYYY-MM-DD of ''
+            if (expDate) {
+                expDate = `${expDate} 23:59:00`;               // altijd 23:59
+            }
+            
             const updateData = {
                 action: 'admin',
                 sub_action: 'update',
@@ -909,7 +949,7 @@
                 status: formData.get('status'),
                 customer_name: formData.get('customer-name'),
                 customer_email: formData.get('customer-email'),
-                expires_at: formData.get('expires-at') || null,
+                expires_at: expDate || null,
                 notes: formData.get('notes')
             };
             
@@ -1253,8 +1293,7 @@
                     <tr>
                         <td><code class="font-mono">${license.license_key}</code></td>
                         <td><span class="badge blue">${licenseTypeName}</span></td>
-                        <td>${license.customer_name || '-'}</td>
-                        <td>${license.customer_email || '-'}</td>
+                        <td>${license.customer_name || '-'}<br>${license.customer_email || '-'}</td>
                         <td><span class="badge ${license.status === 'active' ? 'green' : 'red'}">${license.status === 'active' ? 'Actief' : 'Inactief'}</span></td>
                         <td>${formatDateTime(license.created_at)}</td>
                         <td>${license.expires_at ? formatDateTime(license.expires_at) : '<span class="badge gray">Geen</span>'}</td>
@@ -1523,14 +1562,13 @@
 
         function formatDateTime(dateStr) {
             if (!dateStr) return '-';
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('nl-NL') + ' ' + date.toLocaleTimeString('nl-NL', {hour: '2-digit', minute: '2-digit'});
+            return new Date(dateStr).toLocaleDateString('nl-NL');   // tijd onderdrukt
         }
+
 
         function formatDateTimeInput(dateStr) {
             if (!dateStr) return '';
-            const date = new Date(dateStr);
-            return date.toISOString().slice(0, 16);
+            return new Date(dateStr).toISOString().slice(0, 10); // alleen YYYY-MM-DD
         }
 
         function showMessage(text, type = 'success') {
