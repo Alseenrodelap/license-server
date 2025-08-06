@@ -130,6 +130,9 @@ function handleAdminAction($input) {
         case 'send_license_email':
             sendLicenseEmail($input);
             break;
+        case 'send_test_email':
+            sendTestEmail($input);
+            break;
         default:
             http_response_code(400);
             echo json_encode(['error' => 'Invalid sub action']);
@@ -405,6 +408,58 @@ function deleteLicense($input) {
     } else {
         http_response_code(500);
         echo json_encode(['error' => 'Kon licentie niet verwijderen']);
+    }
+}
+
+function sendTestEmail($input) {
+    $testEmail = $input['test_email'] ?? '';
+    
+    if (empty($testEmail)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Test email address required']);
+        return;
+    }
+    
+    // Validate email format
+    if (!filter_var($testEmail, FILTER_VALIDATE_EMAIL)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid email address format']);
+        return;
+    }
+    
+    require_once 'file-storage.php';
+    require_once 'license-mailer.php';
+    
+    $storage = new FileStorage();
+    $smtpSettings = $storage->getSMTPSettings();
+    
+    if (!$smtpSettings) {
+        http_response_code(500);
+        echo json_encode(['error' => 'SMTP settings not configured']);
+        return;
+    }
+    
+    // Create test email content
+    $subject = "Test E-mail - InnoDIGI License System";
+    $body = "Dit is een test e-mail van het InnoDIGI License System.\n\n";
+    $body .= "SMTP Configuratie Test:\n";
+    $body .= "- Host: " . $smtpSettings['host'] . "\n";
+    $body .= "- Port: " . $smtpSettings['port'] . "\n";
+    $body .= "- Security: " . $smtpSettings['security'] . "\n";
+    $body .= "- Username: " . $smtpSettings['username'] . "\n";
+    $body .= "- From: " . $smtpSettings['from_name'] . " <" . $smtpSettings['from_email'] . ">\n\n";
+    $body .= "Tijdstip: " . date('d-m-Y H:i:s') . "\n\n";
+    $body .= "Als u deze e-mail ontvangt, werkt de SMTP configuratie correct.\n\n";
+    $body .= "Met vriendelijke groet,\nHet InnoDIGI License System";
+    
+    // Send test email using dynamic SMTP settings
+    $mailer = new DynamicSMTPMailer($smtpSettings);
+    
+    if ($mailer->sendMail($testEmail, $subject, $body, false)) {
+        echo json_encode(['success' => true, 'message' => 'Test e-mail verzonden naar ' . $testEmail]);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Kon test e-mail niet verzenden. Controleer SMTP instellingen.']);
     }
 }
 
