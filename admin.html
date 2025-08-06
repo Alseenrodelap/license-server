@@ -1104,25 +1104,50 @@
         }
 
         async function sendTestEmail() {
-            // Get test email from override field or use default from settings
-            const testEmailOverride = document.getElementById('testEmailInput').value;
-            const testEmailDefault = document.getElementById('testEmailAddress').value;
-            const testEmail = testEmailOverride || testEmailDefault;
-            const adminKey = document.getElementById('adminKey').value;
+            console.log('sendTestEmail started');
             
-            if (!testEmail) {
-                showMessage('Voer een test e-mail adres in of stel een standaard test adres in bij SMTP instellingen', 'error');
-                return;
-            }
-            
-            if (!adminKey) {
-                showMessage('Admin key is vereist', 'error');
-                return;
-            }
-            
-            // Open modal and clear previous log
+            // Open modal first
             openModal('smtpTestLogModal');
             clearSmtpLog();
+            
+            console.log('Modal opened, getting elements...');
+            
+            // Get elements with null checks
+            const testEmailElement = document.getElementById('testEmailAddress');
+            const overrideEmailElement = document.getElementById('testEmailInput');
+            
+            console.log('testEmailElement:', testEmailElement);
+            console.log('overrideEmailElement:', overrideEmailElement);
+            
+            if (!testEmailElement) {
+                updateSmtpLog([{ type: 'error', message: 'Test email field not found (ID: testEmailAddress)' }]);
+                return;
+            }
+            
+            // Determine email address to use
+            let testEmail = '';
+            if (overrideEmailElement && overrideEmailElement.value.trim()) {
+                console.log('Using override email:', overrideEmailElement.value.trim());
+                testEmail = overrideEmailElement.value.trim();
+                updateSmtpLog([{ type: 'info', message: 'Using override email: ' + testEmail }]);
+            } else if (testEmailElement.value.trim()) {
+                console.log('Using default email:', testEmailElement.value.trim());
+                testEmail = testEmailElement.value.trim();
+                updateSmtpLog([{ type: 'info', message: 'Using default test email: ' + testEmail }]);
+            } else {
+                console.log('No email found, using fallback');
+                testEmail = 'test@innodigi.nl'; // Fallback
+                updateSmtpLog([{ type: 'info', message: 'Using fallback email: ' + testEmail }]);
+            }
+            
+            console.log('Final email to use:', testEmail);
+            
+            if (!testEmail || !testEmail.includes('@')) {
+                updateSmtpLog([{ type: 'error', message: 'Invalid email address: ' + testEmail }]);
+                return;
+            }
+            
+            updateSmtpLog([{ type: 'info', message: 'Starting SMTP test to: ' + testEmail }]);
             
             try {
                 const response = await fetch('index.php', {
@@ -1146,7 +1171,7 @@
                     }
                     showMessage(result.message, 'success');
                     // Clear the override input
-                    document.getElementById('testEmailInput').value = '';
+                    document.getElementById('testEmailOverride').value = '';
                 } else {
                     showMessage(result.error || 'Kon test e-mail niet verzenden', 'error');
                     if (result.log) {
