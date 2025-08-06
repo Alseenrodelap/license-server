@@ -338,4 +338,1230 @@
                     <div class="card-header-icon">
                         <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                        
+                        </svg>
+                    </div>
+                    <h2>E-mail Template Beheer</h2>
+                    <p>Configureer de e-mail template die wordt gebruikt bij het versturen van licenties</p>
+                </div>
+                
+                <form id="email-template-form">
+                    <div class="form-group">
+                        <div class="form-field">
+                            <label for="email-subject">E-mail Onderwerp</label>
+                            <input type="text" id="email-subject" name="subject" placeholder="Uw InnoDIGI Licentie - {{license_key}}">
+                            <div class="form-help">Beschikbare variabelen: {{customer_name}}, {{license_key}}, {{license_type}}, {{status}}, {{expires_at}}, {{created_at}}, {{notes}}</div>
+                        </div>
+                        <div class="form-field">
+                            <label for="email-body">E-mail Inhoud</label>
+                            <textarea id="email-body" name="body" rows="12" placeholder="E-mail inhoud..."></textarea>
+                            <div class="form-help">Gebruik dezelfde variabelen als hierboven. Tekst wordt verzonden als platte tekst.</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-success">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 19v-2l7.5-7.5 2 2L9 19H7zm10.5-10.5l2-2-2-2-2 2 2 2z"/>
+                            </svg>
+                            Template Opslaan
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="loadEmailTemplate()">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            Herladen
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- SMTP Settings Section -->
+        <div id="smtp-settings-section" class="section hidden">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <h2>SMTP Instellingen</h2>
+                    <p>Configureer de SMTP server voor het versturen van e-mails</p>
+                </div>
+                
+                <form id="smtp-settings-form">
+                    <div class="form-group">
+                        <div class="form-field">
+                            <label for="smtp-enabled">
+                                <input type="checkbox" id="smtp-enabled" name="enabled" checked> SMTP Ingeschakeld
+                            </label>
+                            <div class="form-help">Uitschakelen om PHP mail() te gebruiken als fallback</div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="smtp-host">SMTP Server</label>
+                                <input type="text" id="smtp-host" name="host" placeholder="mail.innodigi.nl" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="smtp-port">Poort</label>
+                                <input type="number" id="smtp-port" name="port" placeholder="587" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="smtp-security">Beveiliging</label>
+                                <select id="smtp-security" name="security" required>
+                                    <option value="">Geen versleuteling</option>
+                                    <option value="tls">TLS (aanbevolen)</option>
+                                    <option value="ssl">SSL</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="smtp-username">Gebruikersnaam</label>
+                                <input type="text" id="smtp-username" name="username" placeholder="noreply@innodigi.nl">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="smtp-password">Wachtwoord</label>
+                                <input type="password" id="smtp-password" name="password" placeholder="••••••••">
+                                <div class="form-help">Laat leeg om huidige wachtwoord te behouden</div>
+                            </div>
+                            <div class="form-field">
+                                <label for="smtp-from-email">Van E-mail</label>
+                                <input type="email" id="smtp-from-email" name="from_email" placeholder="noreply@innodigi.nl" required>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="smtp-from-name">Van Naam</label>
+                            <input type="text" id="smtp-from-name" name="from_name" placeholder="InnoDIGI License System" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="testEmailAddress">Test E-mail Adres:</label>
+                            <input type="email" id="testEmailAddress" placeholder="test@example.com">
+                            <div class="form-help">Het emailadres waar test emails naartoe worden gestuurd</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-success">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 19v-2l7.5-7.5 2 2L9 19H7zm10.5-10.5l2-2-2-2-2 2 2 2z"/>
+                            </svg>
+                            SMTP Opslaan
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="loadSMTPSettings()">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            Herladen
+                        </button>
+                        <button type="button" class="btn btn-ghost" onclick="sendTestEmail()">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
+                            Test E-mail
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Terms Section -->
+        <div id="terms-section" class="section hidden">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM16 18H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                    </div>
+                    <h2>Licentievoorwaarden</h2>
+                    <p>Beheer de algemene voorwaarden die bij licenties horen</p>
+                </div>
+                
+                <div id="terms-editor-container">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Voorwaarden laden...
+                    </div>
+                </div>
+                
+                <div style="margin-top: 1rem;">
+                    <button class="btn btn-success" onclick="saveTerms()">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M7 19v-2l7.5-7.5 2 2L9 19H7zm10.5-10.5l2-2-2-2-2 2 2 2z"/>
+                        </svg>
+                        Voorwaarden Opslaan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div id="message" class="message hidden">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span id="message-text"></span>
+        </div>
+
+        <!-- Edit License Modal -->
+        <div id="edit-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M7 19v-2l7.5-7.5 2 2L9 19H7zm10.5-10.5l2-2-2-2-2 2 2 2z"/>
+                        </svg>
+                    </div>
+                    <h3>Licentie Bewerken</h3>
+                    <p>Wijzig de eigenschappen van deze licentie</p>
+                </div>
+                
+                <form id="edit-form">
+                    <input type="hidden" id="edit-license-key" name="license-key">
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="edit-license-type">Type</label>
+                                <select id="edit-license-type" name="license-type" required>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="edit-status">Status</label>
+                                <select id="edit-status" name="status" required>
+                                    <option value="active">Actief</option>
+                                    <option value="inactive">Inactief</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="edit-customer-name">Klantnaam</label>
+                                <input type="text" id="edit-customer-name" name="customer-name">
+                            </div>
+                            <div class="form-field">
+                                <label for="edit-customer-email">E-mail</label>
+                                <input type="email" id="edit-customer-email" name="customer-email">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="edit-expires-at">Vervaldatum</label>
+                                <input type="datetime-local" id="edit-expires-at" name="expires-at">
+                            </div>
+                            <div class="form-field">
+                                <label for="edit-notes">Notities</label>
+                                <input type="text" id="edit-notes" name="notes">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Annuleren</button>
+                        <button type="submit" class="btn btn-primary">Opslaan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="delete-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-icon">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                        </svg>
+                    </div>
+                    <h3>Licentie Verwijderen</h3>
+                    <p>Weet je zeker dat je deze licentie wilt verwijderen? Deze actie kan niet ongedaan gemaakt worden.</p>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Annuleren</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Verwijderen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SMTP Test Log Modal -->
+    <div id="smtpTestLogModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div class="modal-icon" style="background: #dbeafe;">
+                            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24" style="color: #2563eb;">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <h3 style="margin: 0;">SMTP Test Log</h3>
+                    </div>
+                    <button onclick="closeModal('smtpTestLogModal')" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6b7280;">&times;</button>
+                </div>
+                <p style="margin: 0; color: #6b7280;">Live verbindingslog van SMTP test e-mail</p>
+            </div>
+            
+            <div id="smtpLogContainer" style="max-height: 400px; overflow-y: auto; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; font-family: monospace; font-size: 0.875rem;">
+                <div id="smtpLogContent">
+                    <!-- Log entries will be added here -->
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+                <button onclick="closeModal('smtpTestLogModal')" class="btn btn-secondary">Sluiten</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="quill.min.js"></script>
+    <script>
+        // Global variables
+        let currentLicenses = [];
+        let filteredLicenses = [];
+        let currentPage = 1;
+        let pageSize = 25;
+        let sortColumn = 'created_at';
+        let sortDirection = 'desc';
+        let currentFilter = 'all';
+        let searchTerm = '';
+        let licenseTypes = {};
+        let editingLicenseKey = null;
+        let termsEditor = null;
+
+        const ADMIN_KEY = 'INNODIGI_admin2025!';
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLicenseTypes().then(() => {
+                loadLicenses();
+            });
+            loadEmailTemplate();
+            loadSMTPSettings();
+            loadTerms();
+            updateDashboardStats();
+            
+            // Event listeners
+            document.getElementById('create-form').addEventListener('submit', createLicense);
+            document.getElementById('create-and-email-btn').addEventListener('click', createAndEmailLicense);
+            document.getElementById('edit-form').addEventListener('submit', updateLicense);
+            document.getElementById('email-template-form').addEventListener('submit', saveEmailTemplate);
+            document.getElementById('smtp-settings-form').addEventListener('submit', saveSMTPSettings);
+            document.getElementById('customer-email').addEventListener('input', toggleCreateEmailBtn);
+            
+            // Search functionality
+            document.getElementById('search-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchLicenses();
+                }
+            });
+            
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    setFilter(this.dataset.filter);
+                });
+            });
+            
+            // Table sorting
+            document.querySelectorAll('#licenses-table th.sortable').forEach(th => {
+                th.addEventListener('click', function() {
+                    sortTable(this.dataset.column);
+                });
+            });
+        });
+
+        // Show/Hide sections
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            
+            // Reset navigation buttons
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-secondary');
+            });
+            
+            // Show selected section
+            document.getElementById(section + '-section').classList.remove('hidden');
+            
+            // Update active button
+            event.target.classList.remove('btn-secondary');
+            event.target.classList.add('btn-primary');
+        }
+
+        // API Functions
+        async function apiCall(data) {
+            try {
+                const response = await fetch('index.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({...data, admin_key: ADMIN_KEY})
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                showMessage('API fout: ' + error.message, 'error');
+                return null;
+            }
+        }
+
+        // Load license types
+        async function loadLicenseTypes() {
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'get_license_types'
+            });
+            
+            if (result && result.license_types) {
+                licenseTypes = result.license_types;
+                populateLicenseTypeSelects();
+                renderLicenseTypesEditor();
+            }
+        }
+
+        function populateLicenseTypeSelects() {
+            const selects = ['license-type', 'edit-license-type'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    select.innerHTML = '<option value="">Selecteer type...</option>';
+                    Object.entries(licenseTypes).forEach(([key, name]) => {
+                        select.innerHTML += `<option value="${key}">${name}</option>`;
+                    });
+                }
+            });
+        }
+
+        function renderLicenseTypesEditor() {
+            const container = document.getElementById('license-types-container');
+            container.innerHTML = '';
+            
+            Object.entries(licenseTypes).forEach(([key, name]) => {
+                const div = document.createElement('div');
+                div.className = 'form-row mb-2';
+                div.innerHTML = `
+                    <div class="form-field">
+                        <label>Type Sleutel</label>
+                        <input type="text" value="${key}" data-key="${key}" class="type-key" readonly>
+                    </div>
+                    <div class="form-field">
+                        <label>Naam</label>
+                        <input type="text" value="${name}" data-key="${key}" class="type-name">
+                    </div>
+                    <div style="display: flex; align-items: end;">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeLicenseType('${key}')">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function addLicenseType() {
+            const key = prompt('Nieuwe type sleutel (bijv. "basic"):');
+            if (key && !licenseTypes[key]) {
+                licenseTypes[key] = key.charAt(0).toUpperCase() + key.slice(1);
+                renderLicenseTypesEditor();
+            }
+        }
+
+        function removeLicenseType(key) {
+            if (confirm('Weet je zeker dat je dit licentietype wilt verwijderen?')) {
+                delete licenseTypes[key];
+                renderLicenseTypesEditor();
+            }
+        }
+
+        async function saveLicenseTypes() {
+            // Collect updated values
+            const updatedTypes = {};
+            document.querySelectorAll('.type-name').forEach(input => {
+                const key = input.dataset.key;
+                updatedTypes[key] = input.value;
+            });
+            
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'save_license_types',
+                license_types: updatedTypes
+            });
+            
+            if (result && result.success) {
+                licenseTypes = updatedTypes;
+                populateLicenseTypeSelects();
+                showMessage('Licentietypes opgeslagen', 'success');
+            }
+        }
+
+        // Load licenses
+        async function loadLicenses() {
+            const tbody = document.getElementById('licenses-tbody');
+            tbody.innerHTML = '<tr><td colspan="9" class="loading"><div class="spinner"></div>Licenties laden...</td></tr>';
+            
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'list'
+            });
+            
+            if (result && result.licenses) {
+                currentLicenses = result.licenses;
+                filteredLicenses = [...currentLicenses];
+                applyFilters();
+                updateDashboardStats();
+            } else {
+                tbody.innerHTML = '<tr><td colspan="9" class="empty-state">Geen licenties gevonden</td></tr>';
+            }
+        }
+
+        // Create license
+        async function createLicense(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            const licenseData = {
+                action: 'admin',
+                sub_action: 'create',
+                license_key: formData.get('license-key') || undefined,
+                license_type: formData.get('license-type'),
+                customer_name: formData.get('customer-name'),
+                customer_email: formData.get('customer-email'),
+                expires_at: formData.get('expires-at') || null,
+                notes: formData.get('notes')
+            };
+            
+            const result = await apiCall(licenseData);
+            
+            if (result && result.success) {
+                showMessage(`Licentie aangemaakt: ${result.license_key}`, 'success');
+                form.reset();
+                loadLicenses();
+            }
+        }
+
+        async function createAndEmailLicense(e) {
+            e.preventDefault();
+            const form = document.getElementById('create-form');
+            const formData = new FormData(form);
+            
+            const customerEmail = formData.get('customer-email');
+            if (!customerEmail) {
+                showMessage('E-mail adres is verplicht voor direct verzenden', 'error');
+                return;
+            }
+            
+            // First create the license
+            const licenseData = {
+                action: 'admin',
+                sub_action: 'create',
+                license_key: formData.get('license-key') || undefined,
+                license_type: formData.get('license-type'),
+                customer_name: formData.get('customer-name'),
+                customer_email: customerEmail,
+                expires_at: formData.get('expires-at') || null,
+                notes: formData.get('notes')
+            };
+            
+            const createResult = await apiCall(licenseData);
+            
+            if (createResult && createResult.success) {
+                // Then send the email
+                const emailResult = await apiCall({
+                    action: 'admin',
+                    sub_action: 'send_license_email',
+                    license_key: createResult.license_key
+                });
+                
+                if (emailResult && emailResult.success) {
+                    showMessage(`Licentie aangemaakt en gemaild: ${createResult.license_key}`, 'success');
+                } else {
+                    showMessage(`Licentie aangemaakt maar e-mail kon niet verzonden worden: ${createResult.license_key}`, 'error');
+                }
+                
+                form.reset();
+                toggleCreateEmailBtn();
+                loadLicenses();
+            }
+        }
+
+        function toggleCreateEmailBtn() {
+            const emailInput = document.getElementById('customer-email');
+            const emailBtn = document.getElementById('create-and-email-btn');
+            emailBtn.disabled = !emailInput.value.trim();
+        }
+
+        // Update license
+        async function updateLicense(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            const updateData = {
+                action: 'admin',
+                sub_action: 'update',
+                license_key: editingLicenseKey,
+                license_type: formData.get('license-type'),
+                status: formData.get('status'),
+                customer_name: formData.get('customer-name'),
+                customer_email: formData.get('customer-email'),
+                expires_at: formData.get('expires-at') || null,
+                notes: formData.get('notes')
+            };
+            
+            const result = await apiCall(updateData);
+            
+            if (result && result.success) {
+                showMessage('Licentie bijgewerkt', 'success');
+                closeEditModal();
+                loadLicenses();
+            }
+        }
+
+        // Delete license
+        let deletingLicenseKey = null;
+
+        function deleteLicense(licenseKey) {
+            deletingLicenseKey = licenseKey;
+            document.getElementById('delete-modal').classList.add('show');
+        }
+
+        async function confirmDelete() {
+            if (deletingLicenseKey) {
+                const result = await apiCall({
+                    action: 'admin',
+                    sub_action: 'delete',
+                    license_key: deletingLicenseKey
+                });
+                
+                if (result && result.success) {
+                    showMessage('Licentie verwijderd', 'success');
+                    loadLicenses();
+                }
+            }
+            closeDeleteModal();
+        }
+
+        // Send license email
+        async function sendLicenseEmail(licenseKey) {
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'send_license_email',
+                license_key: licenseKey
+            });
+            
+            if (result && result.success) {
+                showMessage('E-mail verzonden', 'success');
+            }
+        }
+
+        // Email template functions
+        async function loadEmailTemplate() {
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'get_email_template'
+            });
+            
+            if (result && result.template) {
+                document.getElementById('email-subject').value = result.template.subject || '';
+                document.getElementById('email-body').value = result.template.body || '';
+            }
+        }
+
+        async function saveEmailTemplate(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'save_email_template',
+                subject: formData.get('subject'),
+                body: formData.get('body')
+            });
+            
+            if (result && result.success) {
+                showMessage('E-mail template opgeslagen', 'success');
+            }
+        }
+
+        // SMTP settings functions
+        async function loadSMTPSettings() {
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'get_smtp_settings'
+            });
+            
+            if (result && result.settings) {
+                const settings = result.settings;
+                document.getElementById('smtp-enabled').checked = settings.enabled !== false;
+                document.getElementById('smtp-host').value = settings.host || '';
+                document.getElementById('smtp-port').value = settings.port || 587;
+                document.getElementById('smtp-security').value = settings.security || 'tls';
+                document.getElementById('smtp-username').value = settings.username || '';
+                document.getElementById('smtp-password').value = settings.password || '';
+                document.getElementById('smtp-from-email').value = settings.from_email || '';
+                document.getElementById('smtp-from-name').value = settings.from_name || '';
+                document.getElementById('testEmailAddress').value = settings.test_email || '';
+            }
+        }
+
+        async function saveSMTPSettings(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            const testEmail = document.getElementById('testEmailAddress').value;
+            
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'save_smtp_settings',
+                enabled: formData.get('enabled') === 'on',
+                host: formData.get('host'),
+                port: parseInt(formData.get('port')),
+                security: formData.get('security'),
+                username: formData.get('username'),
+                password: formData.get('password'),
+                from_email: formData.get('from_email'),
+                from_name: formData.get('from_name'),
+                test_email: testEmail
+            });
+            
+            if (result && result.success) {
+                showMessage('SMTP instellingen opgeslagen', 'success');
+            }
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = ''; // Restore scrolling
+            }
+        }
+
+        // Clear SMTP log
+        function clearSmtpLog() {
+            const logContent = document.getElementById('smtpLogContent');
+            if (logContent) {
+                logContent.innerHTML = '';
+            }
+        }
+
+        // Add SMTP log entry
+        function updateSmtpLog(entries) {
+            const logContent = document.getElementById('smtpLogContent');
+            if (!logContent) return;
+            
+            entries.forEach(entry => {
+                const logEntry = document.createElement('div');
+                logEntry.style.marginBottom = '0.5rem';
+                logEntry.style.padding = '0.5rem';
+                logEntry.style.borderRadius = '0.25rem';
+                
+                // Color coding based on type
+                let bgColor = '#f3f4f6';
+                let textColor = '#374151';
+                let icon = 'ℹ️';
+                
+                switch(entry.type) {
+                    case 'success':
+                        bgColor = '#dcfce7';
+                        textColor = '#166534';
+                        icon = '✅';
+                        break;
+                    case 'error':
+                        bgColor = '#fee2e2';
+                        textColor = '#991b1b';
+                        icon = '❌';
+                        break;
+                    case 'warning':
+                        bgColor = '#fef3c7';
+                        textColor = '#92400e';
+                        icon = '⚠️';
+                        break;
+                    case 'info':
+                    default:
+                        bgColor = '#dbeafe';
+                        textColor = '#1e40af';
+                        icon = 'ℹ️';
+                        break;
+                }
+                
+                logEntry.style.backgroundColor = bgColor;
+                logEntry.style.color = textColor;
+                logEntry.innerHTML = `<span style="margin-right: 0.5rem;">[${entry.timestamp}]</span>${icon} ${entry.message}`;
+                
+                logContent.appendChild(logEntry);
+            });
+            
+            // Scroll to bottom
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+
+        async function sendTestEmail() {
+            console.log('sendTestEmail started');
+            
+            // Open modal first
+            openModal('smtpTestLogModal');
+            clearSmtpLog();
+            
+            console.log('Modal opened, getting elements...');
+            
+            // Get elements with null checks
+            const testEmailElement = document.getElementById('testEmailAddress');
+            const overrideEmailElement = document.getElementById('testEmailInput');
+            
+            console.log('testEmailElement:', testEmailElement);
+            console.log('overrideEmailElement:', overrideEmailElement);
+            
+            if (!testEmailElement) {
+                updateSmtpLog([{ type: 'error', message: 'Test email field not found (ID: testEmailAddress)' }]);
+                return;
+            }
+            
+            // Determine email address to use
+            let testEmail = '';
+            if (overrideEmailElement && overrideEmailElement.value.trim()) {
+                console.log('Using override email:', overrideEmailElement.value.trim());
+                testEmail = overrideEmailElement.value.trim();
+                updateSmtpLog([{ type: 'info', message: 'Using override email: ' + testEmail }]);
+            } else if (testEmailElement.value.trim()) {
+                console.log('Using default email:', testEmailElement.value.trim());
+                testEmail = testEmailElement.value.trim();
+                updateSmtpLog([{ type: 'info', message: 'Using default test email: ' + testEmail }]);
+            } else {
+                console.log('No email found, using fallback');
+                testEmail = 'test@innodigi.nl'; // Fallback
+                updateSmtpLog([{ type: 'info', message: 'Using fallback email: ' + testEmail }]);
+            }
+            
+            console.log('Final email to use:', testEmail);
+            
+            if (!testEmail || !testEmail.includes('@')) {
+                updateSmtpLog([{ type: 'error', message: 'Invalid email address: ' + testEmail }]);
+                return;
+            }
+            
+            updateSmtpLog([{ type: 'info', message: 'Starting SMTP test to: ' + testEmail }]);
+            
+            try {
+                const response = await fetch('index.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'admin',
+                        sub_action: 'send_test_email',
+                        admin_key: adminKey,
+                        test_email: testEmail
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.log) {
+                        updateSmtpLog(result.log);
+                    }
+                    showMessage(result.message, 'success');
+                    // Clear the override input
+                    document.getElementById('testEmailOverride').value = '';
+                } else {
+                    showMessage(result.error || 'Kon test e-mail niet verzenden', 'error');
+                    if (result.log) {
+                        updateSmtpLog(result.log);
+                    }
+                }
+            } catch (error) {
+                console.error('Error sending test email:', error);
+                showMessage('Er ging iets mis bij het verzenden van de test e-mail', 'error');
+            }
+        }
+
+        // Terms functions
+        async function loadTerms() {
+            try {
+                const response = await fetch('terms.php');
+                const terms = await response.text();
+                
+                if (!termsEditor) {
+                    const container = document.getElementById('terms-editor-container');
+                    container.innerHTML = '<div id="terms-editor"></div>';
+                    termsEditor = new Quill('#terms-editor', {
+                        placeholder: 'Voer hier de licentievoorwaarden in...'
+                    });
+                }
+                
+                termsEditor.setHTML(terms);
+            } catch (error) {
+                document.getElementById('terms-editor-container').innerHTML = 
+                    '<p class="text-center">Fout bij laden van voorwaarden</p>';
+            }
+        }
+
+        async function saveTerms() {
+            if (!termsEditor) return;
+            
+            try {
+                const response = await fetch('terms.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'save',
+                        admin_key: ADMIN_KEY,
+                        content: termsEditor.getHTML()
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('Voorwaarden opgeslagen', 'success');
+                } else {
+                    showMessage('Fout bij opslaan: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Fout bij opslaan van voorwaarden', 'error');
+            }
+        }
+
+        // Table functions
+        function renderTable() {
+            const tbody = document.getElementById('licenses-tbody');
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const pageData = filteredLicenses.slice(start, end);
+            
+            if (pageData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="empty-state"><div class="empty-state-icon"><svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div><h3>Geen licenties gevonden</h3><p>Er zijn geen licenties die voldoen aan je criteria</p></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = pageData.map(license => {
+                const hasEmail = license.customer_email && license.customer_email.trim();
+                const licenseTypeName = licenseTypes[license.license_type] || license.license_type;
+                
+                return `
+                    <tr>
+                        <td><code class="font-mono">${license.license_key}</code></td>
+                        <td><span class="badge blue">${licenseTypeName}</span></td>
+                        <td>${license.customer_name || '-'}</td>
+                        <td>${license.customer_email || '-'}</td>
+                        <td><span class="badge ${license.status === 'active' ? 'green' : 'red'}">${license.status === 'active' ? 'Actief' : 'Inactief'}</span></td>
+                        <td>${formatDateTime(license.created_at)}</td>
+                        <td>${license.expires_at ? formatDateTime(license.expires_at) : '<span class="badge gray">Geen</span>'}</td>
+                        <td>${license.last_checked ? formatDateTime(license.last_checked) : '-'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-secondary" onclick="editLicense('${license.license_key}')" title="Bewerken">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M7 19v-2l7.5-7.5 2 2L9 19H7zm10.5-10.5l2-2-2-2-2 2 2 2z"/>
+                                    </svg>
+                                </button>
+                                ${hasEmail ? `
+                                <button class="btn btn-sm btn-success" onclick="sendLicenseEmail('${license.license_key}')" title="E-mail verzenden">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                                    </svg>
+                                </button>
+                                ` : ''}
+                                <button class="btn btn-sm btn-danger" onclick="deleteLicense('${license.license_key}')" title="Verwijderen">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            updatePagination();
+        }
+
+        function updatePagination() {
+            const totalItems = filteredLicenses.length;
+            const totalPages = Math.ceil(totalItems / pageSize);
+            const start = (currentPage - 1) * pageSize + 1;
+            const end = Math.min(currentPage * pageSize, totalItems);
+            
+            document.getElementById('page-info').textContent = `${start}-${end} van ${totalItems}`;
+            
+            document.getElementById('prev-btn').disabled = currentPage <= 1;
+            document.getElementById('next-btn').disabled = currentPage >= totalPages;
+            
+            // Page numbers
+            const pageNumbers = document.getElementById('page-numbers');
+            pageNumbers.innerHTML = '';
+            
+            if (totalPages <= 7) {
+                for (let i = 1; i <= totalPages; i++) {
+                    pageNumbers.appendChild(createPageButton(i));
+                }
+            } else {
+                pageNumbers.appendChild(createPageButton(1));
+                
+                if (currentPage > 3) {
+                    pageNumbers.appendChild(createEllipsis());
+                }
+                
+                const start = Math.max(2, currentPage - 1);
+                const end = Math.min(totalPages - 1, currentPage + 1);
+                
+                for (let i = start; i <= end; i++) {
+                    pageNumbers.appendChild(createPageButton(i));
+                }
+                
+                if (currentPage < totalPages - 2) {
+                    pageNumbers.appendChild(createEllipsis());
+                }
+                
+                if (totalPages > 1) {
+                    pageNumbers.appendChild(createPageButton(totalPages));
+                }
+            }
+        }
+
+        function createPageButton(page) {
+            const button = document.createElement('button');
+            button.className = 'page-number' + (page === currentPage ? ' active' : '');
+            button.textContent = page;
+            button.onclick = () => goToPage(page);
+            return button;
+        }
+
+        function createEllipsis() {
+            const span = document.createElement('span');
+            span.className = 'page-ellipsis';
+            span.textContent = '...';
+            return span;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderTable();
+        }
+
+        function nextPage() {
+            if (currentPage < Math.ceil(filteredLicenses.length / pageSize)) {
+                currentPage++;
+                renderTable();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        }
+
+        function changePageSize() {
+            pageSize = parseInt(document.getElementById('page-size').value);
+            currentPage = 1;
+            renderTable();
+        }
+
+        // Search and filter functions
+        function searchLicenses() {
+            searchTerm = document.getElementById('search-input').value.toLowerCase();
+            applyFilters();
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === filter);
+            });
+            applyFilters();
+        }
+
+        function clearFilters() {
+            currentFilter = 'all';
+            searchTerm = '';
+            document.getElementById('search-input').value = '';
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === 'all');
+            });
+            applyFilters();
+        }
+
+        function applyFilters() {
+            filteredLicenses = currentLicenses.filter(license => {
+                // Search filter
+                if (searchTerm) {
+                    const searchFields = [
+                        license.license_key,
+                        license.customer_name || '',
+                        license.customer_email || '',
+                        licenseTypes[license.license_type] || license.license_type
+                    ];
+                    
+                    if (!searchFields.some(field => field.toLowerCase().includes(searchTerm))) {
+                        return false;
+                    }
+                }
+                
+                // Status filter
+                if (currentFilter !== 'all') {
+                    if (currentFilter === 'expired') {
+                        if (!license.expires_at || new Date(license.expires_at) > new Date()) {
+                            return false;
+                        }
+                    } else if (currentFilter !== license.status) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            });
+            
+            // Sort
+            filteredLicenses.sort((a, b) => {
+                let aVal = a[sortColumn] || '';
+                let bVal = b[sortColumn] || '';
+                
+                if (sortColumn === 'created_at' || sortColumn === 'expires_at' || sortColumn === 'last_checked') {
+                    aVal = new Date(aVal || 0);
+                    bVal = new Date(bVal || 0);
+                } else if (sortColumn === 'license_type') {
+                    aVal = licenseTypes[aVal] || aVal;
+                    bVal = licenseTypes[bVal] || bVal;
+                }
+                
+                if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+                if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+            
+            currentPage = 1;
+            renderTable();
+        }
+
+        function sortTable(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+            
+            // Update sort indicators
+            document.querySelectorAll('#licenses-table th.sortable').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+                if (th.dataset.column === column) {
+                    th.classList.add('sort-' + sortDirection);
+                }
+            });
+            
+            applyFilters();
+        }
+
+        // Modal functions
+        function editLicense(licenseKey) {
+            editingLicenseKey = licenseKey;
+            const license = currentLicenses.find(l => l.license_key === licenseKey);
+            
+            if (license) {
+                document.getElementById('edit-license-key').value = license.license_key;
+                document.getElementById('edit-license-type').value = license.license_type;
+                document.getElementById('edit-status').value = license.status;
+                document.getElementById('edit-customer-name').value = license.customer_name || '';
+                document.getElementById('edit-customer-email').value = license.customer_email || '';
+                document.getElementById('edit-expires-at').value = license.expires_at ? formatDateTimeInput(license.expires_at) : '';
+                document.getElementById('edit-notes').value = license.notes || '';
+                
+                document.getElementById('edit-modal').classList.add('show');
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('show');
+            editingLicenseKey = null;
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('delete-modal').classList.remove('show');
+            deletingLicenseKey = null;
+        }
+
+        // Utility functions
+        function updateDashboardStats() {
+            const now = new Date();
+            const stats = {
+                active: 0,
+                inactive: 0,
+                expired: 0,
+                total: currentLicenses.length
+            };
+            
+            currentLicenses.forEach(license => {
+                if (license.status === 'active') {
+                    if (license.expires_at && new Date(license.expires_at) < now) {
+                        stats.expired++;
+                    } else {
+                        stats.active++;
+                    }
+                } else {
+                    stats.inactive++;
+                }
+            });
+            
+            document.getElementById('active-count').textContent = stats.active;
+            document.getElementById('inactive-count').textContent = stats.inactive;
+            document.getElementById('expired-count').textContent = stats.expired;
+            document.getElementById('total-count').textContent = stats.total;
+        }
+
+        function formatDateTime(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('nl-NL') + ' ' + date.toLocaleTimeString('nl-NL', {hour: '2-digit', minute: '2-digit'});
+        }
+
+        function formatDateTimeInput(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toISOString().slice(0, 16);
+        }
+
+        function showMessage(text, type = 'success') {
+            const message = document.getElementById('message');
+            const messageText = document.getElementById('message-text');
+            
+            message.className = `message ${type}`;
+            messageText.textContent = text;
+            message.classList.remove('hidden');
+            
+            setTimeout(() => {
+                message.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                if (e.target.id === 'edit-modal') closeEditModal();
+                if (e.target.id === 'delete-modal') closeDeleteModal();
+            }
+        });
+    </script>
+</body>
+</html>
