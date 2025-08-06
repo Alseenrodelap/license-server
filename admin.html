@@ -1259,6 +1259,11 @@
                         <td>${formatDateTime(license.created_at)}</td>
                         <td>${license.expires_at ? formatDateTime(license.expires_at) : '<span class="badge gray">Geen</span>'}</td>
                         <td>${license.last_checked ? formatDateTime(license.last_checked) : '-'}</td>
+                                <div class="form-field">
+                                    <label for="testEmailAddress">Test E-mail Adres:</label>
+                                    <input type="email" id="testEmailAddress" placeholder="test@example.com">
+                                    <div class="form-help">Het emailadres waar test emails naartoe worden gestuurd</div>
+                                </div>
                         <td>
                             <div class="action-buttons">
                                 <button class="btn btn-sm btn-secondary" onclick="editLicense('${license.license_key}')" title="Bewerken">
