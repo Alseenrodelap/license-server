@@ -63,7 +63,9 @@ function handleVerifyLicense($input) {
             'valid' => true,
             'message' => 'Licentie geldig',
             'expires_at' => $license['expires_at'],
-            'license_type' => $license['license_type']
+            'license_type' => $license['license_type'],
+            'customer_name' => $license['customer_name'] ?? '',
+            'customer_email' => $license['customer_email'] ?? ''
         ]);
     } else {
         if ($license) {
@@ -107,6 +109,27 @@ function handleAdminAction($input) {
         case 'delete':
             deleteLicense($input);
             break;
+        case 'get_license_types':
+            getLicenseTypes();
+            break;
+        case 'save_license_types':
+            saveLicenseTypes($input);
+            break;
+        case 'get_email_template':
+            getEmailTemplate();
+            break;
+        case 'save_email_template':
+            saveEmailTemplate($input);
+            break;
+        case 'get_smtp_settings':
+            getSMTPSettings();
+            break;
+        case 'save_smtp_settings':
+            saveSMTPSettings($input);
+            break;
+        case 'send_license_email':
+            sendLicenseEmail($input);
+            break;
         default:
             http_response_code(400);
             echo json_encode(['error' => 'Invalid sub action']);
@@ -134,6 +157,104 @@ function listLicenses() {
     }, $licenses);
     
     echo json_encode(['licenses' => $publicLicenses]);
+}
+
+function getLicenseTypes() {
+    $storage = new FileStorage();
+    $types = $storage->getLicenseTypes();
+    echo json_encode(['license_types' => $types]);
+}
+
+function saveLicenseTypes($input) {
+    $types = $input['license_types'] ?? [];
+    
+    if (empty($types) || !is_array($types)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid license types data']);
+        return;
+    }
+    
+    $storage = new FileStorage();
+    if ($storage->saveLicenseTypes($types)) {
+        echo json_encode(['success' => true, 'message' => 'Licentietypes opgeslagen']);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Kon licentietypes niet opslaan']);
+    }
+}
+
+function getEmailTemplate() {
+    $storage = new FileStorage();
+    $template = $storage->getEmailTemplate();
+    echo json_encode(['template' => $template]);
+}
+
+function saveEmailTemplate($input) {
+    $template = [
+        'subject' => $input['subject'] ?? '',
+        'body' => $input['body'] ?? ''
+    ];
+    
+    $storage = new FileStorage();
+    if ($storage->saveEmailTemplate($template)) {
+        echo json_encode(['success' => true, 'message' => 'E-mail template opgeslagen']);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Kon e-mail template niet opslaan']);
+    }
+}
+
+function getSMTPSettings() {
+    $storage = new FileStorage();
+    $settings = $storage->getSMTPSettings();
+    // Don't return the password for security
+    if ($settings && isset($settings['password'])) {
+        $settings['password'] = $settings['password'] ? '••••••••' : '';
+    }
+    echo json_encode(['settings' => $settings]);
+}
+
+function saveSMTPSettings($input) {
+    $storage = new FileStorage();
+    $currentSettings = $storage->getSMTPSettings() ?? [];
+    
+    $settings = [
+        'enabled' => $input['enabled'] ?? true,
+        'host' => $input['host'] ?? '',
+        'port' => (int)($input['port'] ?? 587),
+        'security' => $input['security'] ?? 'tls',
+        'username' => $input['username'] ?? '',
+        'password' => $input['password'] === '••••••••' ? $currentSettings['password'] : $input['password'] ?? '',
+        'from_email' => $input['from_email'] ?? '',
+        'from_name' => $input['from_name'] ?? ''
+    ];
+    
+    if ($storage->saveSMTPSettings($settings)) {
+        echo json_encode(['success' => true, 'message' => 'SMTP instellingen opgeslagen']);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Kon SMTP instellingen niet opslaan']);
+    }
+}
+
+function sendLicenseEmail($input) {
+    $licenseKey = $input['license_key'] ?? '';
+    
+    if (empty($licenseKey)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'License key required']);
+        return;
+    }
+    
+    require_once 'license-mailer.php';
+    $mailer = new LicenseMailer();
+    
+    if ($mailer->sendLicenseEmail($licenseKey)) {
+        echo json_encode(['success' => true, 'message' => 'E-mail verzonden']);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Kon e-mail niet verzenden']);
+    }
 }
 
 function createLicense($input) {
@@ -288,6 +409,6 @@ function deleteLicense($input) {
 }
 
 function generateLicenseKey() {
-    return 'PB-' . strtoupper(bin2hex(random_bytes(4))) . '-' . strtoupper(bin2hex(random_bytes(4)));
+    return 'ID-' . strtoupper(bin2hex(random_bytes(4))) . '-' . strtoupper(bin2hex(random_bytes(4)));
 }
 ?>

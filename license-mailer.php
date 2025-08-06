@@ -1,25 +1,72 @@
 <?php
-class SMTPMailer {
-    private $host;
-    private $port;
-    private $security;
-    private $username;
-    private $password;
-    private $fromEmail;
-    private $fromName;
+require_once 'file-storage.php';
+
+class LicenseMailer {
+    private $storage;
     
     public function __construct() {
-        $this->host = SMTP_HOST;
-        $this->port = SMTP_PORT;
-        $this->security = SMTP_SECURITY;
-        $this->username = SMTP_USERNAME;
-        $this->password = SMTP_PASSWORD;
-        $this->fromEmail = SMTP_FROM_EMAIL;
-        $this->fromName = SMTP_FROM_NAME;
+        $this->storage = new FileStorage();
+    }
+    
+    public function sendLicenseEmail($licenseKey) {
+        // Get license data
+        $license = $this->storage->getLicense($licenseKey);
+        if (!$license) {
+            return false;
+        }
+        
+        // Check if customer has email
+        $customerEmail = $license['customer_email'] ?? '';
+        if (empty($customerEmail)) {
+            return false;
+        }
+        
+        // Get email template
+        $template = $this->storage->getEmailTemplate();
+        if (!$template) {
+            return false;
+        }
+        
+        // Get SMTP settings
+        $smtpSettings = $this->storage->getSMTPSettings();
+        if (!$smtpSettings) {
+            return false;
+        }
+        
+        // Get license types for display name
+        $licenseTypes = $this->storage->getLicenseTypes() ?? [];
+        $licenseTypeDisplay = $licenseTypes[$license['license_type']] ?? $license['license_type'];
+        
+        // Prepare template variables
+        $variables = [
+            '{{customer_name}}' => $license['customer_name'] ?? 'Geachte klant',
+            '{{license_key}}' => $license['license_key'],
+            '{{license_type}}' => $licenseTypeDisplay,
+            '{{status}}' => $license['status'] === 'active' ? 'Actief' : 'Inactief',
+            '{{expires_at}}' => $license['expires_at'] ? date('d-m-Y H:i', strtotime($license['expires_at'])) : 'Geen',
+            '{{created_at}}' => date('d-m-Y H:i', strtotime($license['created_at'])),
+            '{{notes}}' => $license['notes'] ?? ''
+        ];
+        
+        // Replace template variables
+        $subject = str_replace(array_keys($variables), array_values($variables), $template['subject']);
+        $body = str_replace(array_keys($variables), array_values($variables), $template['body']);
+        
+        // Send email using dynamic SMTP settings
+        $mailer = new DynamicSMTPMailer($smtpSettings);
+        return $mailer->sendMail($customerEmail, $subject, $body, false);
+    }
+}
+
+class DynamicSMTPMailer {
+    private $settings;
+    
+    public function __construct($smtpSettings) {
+        $this->settings = $smtpSettings;
     }
     
     public function sendMail($to, $subject, $body, $isHtml = false) {
-        if (!SMTP_ENABLED) {
+        if (!$this->settings['enabled']) {
             return $this->sendWithPHPMail($to, $subject, $body, $isHtml);
         }
         
@@ -31,24 +78,24 @@ class SMTPMailer {
             }
             
             $this->sendSMTPCommand($socket, '', '220');
-            $this->sendSMTPCommand($socket, 'EHLO ' . $_SERVER['HTTP_HOST'], '250');
+            $this->sendSMTPCommand($socket, 'EHLO ' . ($_SERVER['HTTP_HOST'] ?? 'localhost'), '250');
             
             // Start TLS if required
-            if ($this->security === 'tls') {
+            if ($this->settings['security'] === 'tls') {
                 $this->sendSMTPCommand($socket, 'STARTTLS', '220');
                 stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
-                $this->sendSMTPCommand($socket, 'EHLO ' . $_SERVER['HTTP_HOST'], '250');
+                $this->sendSMTPCommand($socket, 'EHLO ' . ($_SERVER['HTTP_HOST'] ?? 'localhost'), '250');
             }
             
             // Authentication
-            if ($this->username && $this->password) {
+            if ($this->settings['username'] && $this->settings['password']) {
                 $this->sendSMTPCommand($socket, 'AUTH LOGIN', '334');
-                $this->sendSMTPCommand($socket, base64_encode($this->username), '334');
-                $this->sendSMTPCommand($socket, base64_encode($this->password), '235');
+                $this->sendSMTPCommand($socket, base64_encode($this->settings['username']), '334');
+                $this->sendSMTPCommand($socket, base64_encode($this->settings['password']), '235');
             }
             
             // Send email
-            $this->sendSMTPCommand($socket, 'MAIL FROM: <' . $this->fromEmail . '>', '250');
+            $this->sendSMTPCommand($socket, 'MAIL FROM: <' . $this->settings['from_email'] . '>', '250');
             $this->sendSMTPCommand($socket, 'RCPT TO: <' . $to . '>', '250');
             $this->sendSMTPCommand($socket, 'DATA', '354');
             
@@ -71,14 +118,14 @@ class SMTPMailer {
     private function connectToSMTP() {
         $context = stream_context_create();
         
-        if ($this->security === 'ssl') {
-            $host = 'ssl://' . $this->host;
+        if ($this->settings['security'] === 'ssl') {
+            $host = 'ssl://' . $this->settings['host'];
         } else {
-            $host = $this->host;
+            $host = $this->settings['host'];
         }
         
         return stream_socket_client(
-            $host . ':' . $this->port,
+            $host . ':' . $this->settings['port'],
             $errno,
             $errstr,
             30,
@@ -110,11 +157,11 @@ class SMTPMailer {
     
     private function buildHeaders($to, $subject, $isHtml) {
         $headers = [];
-        $headers[] = 'From: ' . $this->fromName . ' <' . $this->fromEmail . '>';
+        $headers[] = 'From: ' . $this->settings['from_name'] . ' <' . $this->settings['from_email'] . '>';
         $headers[] = 'To: ' . $to;
         $headers[] = 'Subject: ' . $subject;
         $headers[] = 'Date: ' . date('r');
-        $headers[] = 'Message-ID: <' . uniqid() . '@' . $_SERVER['HTTP_HOST'] . '>';
+        $headers[] = 'Message-ID: <' . uniqid() . '@' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '>';
         $headers[] = 'X-Mailer: InnoDIGI License System';
         $headers[] = 'MIME-Version: 1.0';
         
@@ -131,8 +178,8 @@ class SMTPMailer {
     
     private function sendWithPHPMail($to, $subject, $body, $isHtml) {
         $headers = [];
-        $headers[] = 'From: ' . $this->fromName . ' <' . $this->fromEmail . '>';
-        $headers[] = 'Reply-To: ' . $this->fromEmail;
+        $headers[] = 'From: ' . $this->settings['from_name'] . ' <' . $this->settings['from_email'] . '>';
+        $headers[] = 'Reply-To: ' . $this->settings['from_email'];
         $headers[] = 'X-Mailer: InnoDIGI License System';
         $headers[] = 'MIME-Version: 1.0';
         

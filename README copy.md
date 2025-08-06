@@ -1,6 +1,6 @@
-# Photobooth License Server
+# InnoDIGI License Server
 
-PHP-gebaseerde licentie server voor de Raspberry Pi Photobooth applicatie met bestandsopslag.
+PHP-gebaseerde licentie server voor InnoDIGI applicaties met bestandsopslag.
 
 ## Installatie
 
@@ -51,14 +51,14 @@ Bezoek `admin.html` om licenties te beheren:
 
 **Licentie Verificatie:**
 ```bash
-curl -X POST https://www.boothkings.nl/photoboothapplicenties/api/license.php \
+curl -X POST https://www.innodigi.nl/api/license.php \
   -H "Content-Type: application/json" \
-  -d '{"action":"verify","license_key":"PB-XXXXXXXX-XXXXXXXX"}'
+  -d '{"action":"verify","license_key":"ID-XXXXXXXX-XXXXXXXX"}'
 ```
 
 **Admin Acties:**
 ```bash
-curl -X POST https://www.boothkings.nl/photoboothapplicenties/api/license.php \
+curl -X POST https://www.innodigi.nl/api/license.php \
   -H "Content-Type: application/json" \
   -d '{"action":"admin","sub_action":"list","admin_key":"your-admin-key"}'
 ```

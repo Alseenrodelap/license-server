@@ -17,6 +17,46 @@ class FileStorage {
             // Create .htaccess to prevent direct access
             file_put_contents($this->dataDir . '/.htaccess', "Deny from all\n");
         }
+        
+        // Initialize default license types and email template if they don't exist
+        $this->initializeDefaults();
+    }
+    
+    private function initializeDefaults() {
+        // Default license types
+        if (!$this->getLicenseTypes()) {
+            $defaultTypes = [
+                'trial' => 'Trial (30 dagen)',
+                'standard' => 'Standard',
+                'premium' => 'Premium',
+                'enterprise' => 'Enterprise'
+            ];
+            $this->saveLicenseTypes($defaultTypes);
+        }
+        
+        // Default email template
+        if (!$this->getEmailTemplate()) {
+            $defaultTemplate = [
+                'subject' => 'Uw InnoDIGI Licentie - {{license_key}}',
+                'body' => "Beste {{customer_name}},\n\nHierbij ontvangt u uw InnoDIGI licentie details:\n\nLicentie Sleutel: {{license_key}}\nLicentie Type: {{license_type}}\nStatus: {{status}}\nVerloopt op: {{expires_at}}\n\nMet vriendelijke groet,\nHet InnoDIGI Team"
+            ];
+            $this->saveEmailTemplate($defaultTemplate);
+        }
+        
+        // Default SMTP settings
+        if (!$this->getSMTPSettings()) {
+            $defaultSMTP = [
+                'enabled' => true,
+                'host' => 'mail.innodigi.nl',
+                'port' => 587,
+                'security' => 'tls',
+                'username' => 'noreply@innodigi.nl',
+                'password' => '',
+                'from_email' => 'noreply@innodigi.nl',
+                'from_name' => 'InnoDIGI License System'
+            ];
+            $this->saveSMTPSettings($defaultSMTP);
+        }
     }
     
     public function getLicense($licenseKey) {
@@ -76,6 +116,63 @@ class FileStorage {
         });
         
         return $licenses;
+    }
+    
+    public function getLicenseTypes() {
+        $filename = $this->dataDir . '/license_types.json';
+        if (file_exists($filename)) {
+            $encryptedData = file_get_contents($filename);
+            $decryptedData = $this->decrypt($encryptedData);
+            if ($decryptedData !== false) {
+                return json_decode($decryptedData, true);
+            }
+        }
+        return null;
+    }
+    
+    public function saveLicenseTypes($types) {
+        $filename = $this->dataDir . '/license_types.json';
+        $jsonData = json_encode($types);
+        $encryptedData = $this->encrypt($jsonData);
+        return file_put_contents($filename, $encryptedData) !== false;
+    }
+    
+    public function getEmailTemplate() {
+        $filename = $this->dataDir . '/email_template.json';
+        if (file_exists($filename)) {
+            $encryptedData = file_get_contents($filename);
+            $decryptedData = $this->decrypt($encryptedData);
+            if ($decryptedData !== false) {
+                return json_decode($decryptedData, true);
+            }
+        }
+        return null;
+    }
+    
+    public function saveEmailTemplate($template) {
+        $filename = $this->dataDir . '/email_template.json';
+        $jsonData = json_encode($template);
+        $encryptedData = $this->encrypt($jsonData);
+        return file_put_contents($filename, $encryptedData) !== false;
+    }
+    
+    public function getSMTPSettings() {
+        $filename = $this->dataDir . '/smtp_settings.json';
+        if (file_exists($filename)) {
+            $encryptedData = file_get_contents($filename);
+            $decryptedData = $this->decrypt($encryptedData);
+            if ($decryptedData !== false) {
+                return json_decode($decryptedData, true);
+            }
+        }
+        return null;
+    }
+    
+    public function saveSMTPSettings($settings) {
+        $filename = $this->dataDir . '/smtp_settings.json';
+        $jsonData = json_encode($settings);
+        $encryptedData = $this->encrypt($jsonData);
+        return file_put_contents($filename, $encryptedData) !== false;
     }
     
     public function updateLastChecked($licenseKey) {

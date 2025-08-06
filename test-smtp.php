@@ -9,7 +9,7 @@ if ($_POST['test_email'] ?? false) {
     $testEmail = $_POST['email'] ?? SMTP_TO_EMAIL;
     
     $mailer = new SMTPMailer();
-    $subject = "SMTP Test - Photobooth License System";
+    $subject = "SMTP Test - InnoDIGI License System";
     $body = "Dit is een test email om te controleren of de SMTP configuratie correct werkt.\n\n";
     $body .= "Configuratie:\n";
     $body .= "- SMTP Host: " . SMTP_HOST . "\n";

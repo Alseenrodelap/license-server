@@ -33,13 +33,13 @@ $userAgent = $input['user_agent'] ?? 'unknown';
 $url = $input['url'] ?? 'unknown';
 
 // Create email content
-$subject = "🚨 Photobooth Tampering Detected - License: " . substr($licenseKey, 0, 16) . "...";
+$subject = "🚨 InnoDIGI Tampering Detected - License: " . substr($licenseKey, 0, 16) . "...";
 
 $emailBody = "
-PHOTOBOOTH TAMPERING DETECTION ALERT
-=====================================
+INNODIGI TAMPERING DETECTION ALERT
+===================================
 
-Een mogelijke tampering poging is gedetecteerd in een photobooth applicatie.
+Een mogelijke tampering poging is gedetecteerd in een InnoDIGI applicatie.
 
 DETAILS:
 --------
@@ -57,7 +57,7 @@ ACTIE VEREIST:
 2. Neem contact op met de admin ({$adminEmail})
 3. Onderzoek mogelijke ongeautoriseerde wijzigingen
 
-Dit is een automatisch gegenereerd bericht van het Photobooth Licentie Systeem.
+Dit is een automatisch gegenereerd bericht van het InnoDIGI Licentie Systeem.
 ";
 
 // Send email using SMTP or PHP mail
