@@ -1106,7 +1106,7 @@
         async function sendTestEmail() {
             // Get test email from override field or use default from settings
             const testEmailOverride = document.getElementById('testEmailOverride').value;
-            const testEmailDefault = document.getElementById('testEmailAddress').value;
+            const testEmailDefault = document.getElementById('smtpTestEmail').value;
             const testEmail = testEmailOverride || testEmailDefault;
             const adminKey = document.getElementById('adminKey').value;
             
