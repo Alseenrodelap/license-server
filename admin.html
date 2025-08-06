@@ -2,9 +2,8 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="copyright" content="© 2025 InnoDIGI, Rosmalen – gelicentieerd aan Booth Kings V.O.F.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photobooth License Admin</title>
+    <title>InnoDIGI License Server - Admin</title>
     <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="quill.css">
 </head>
@@ -13,258 +12,247 @@
         <!-- Header -->
         <div class="header">
             <div class="header-icon">
-                <svg fill="currentColor" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd"/>
-                    <path d="M9 12a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5A.75.75 0 019 12zm0 3a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5A.75.75 0 019 15z"/>
+                <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                 </svg>
             </div>
-            <h1>License admin paneel</h1>
-            <p>Photobooth Licentie Beheer</p>
+            <h1>InnoDIGI License Server</h1>
+            <p>Beheer van licenties en instellingen</p>
         </div>
 
-        <!-- Login Section -->
-        <div id="loginSection" class="card">
-            <div class="card-header">
-                <div class="card-header-icon">
-                    <svg fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd"/>
+        <!-- Navigation -->
+        <div class="card">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                <button class="btn btn-primary" onclick="showSection('dashboard')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                     </svg>
-                </div>
-                <h2>Admin Toegang</h2>
-                <p>Voer de admin sleutel in om door te gaan</p>
+                    Dashboard
+                </button>
+                <button class="btn btn-secondary" onclick="showSection('licenses')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                    </svg>
+                    Licenties
+                </button>
+                <button class="btn btn-secondary" onclick="showSection('license-types')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 11H7v4h2v-4zm4 0h-2v4h2v-4zm4 0h-2v4h2v-4zm2-7h-2V2h-2v2H9V2H7v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    Licentietypes
+                </button>
+                <button class="btn btn-secondary" onclick="showSection('email-template')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                    E-mail Template
+                </button>
+                <button class="btn btn-secondary" onclick="showSection('smtp-settings')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    SMTP
+                </button>
+                <button class="btn btn-secondary" onclick="showSection('terms')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM16 18H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                    </svg>
+                    Voorwaarden
+                </button>
             </div>
-            
-            <div class="form-group">
-                <div class="form-field">
-                    <label for="adminKey">Admin Sleutel:</label>
-                    <input type="password" id="adminKey" placeholder="Voer admin sleutel in">
-                </div>
-            </div>
-            
-            <button type="button" onclick="login()" class="btn btn-primary btn-full">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
-                </svg>
-                Inloggen
-            </button>
-            
-            <div id="loginMessage" class="message hidden"></div>
         </div>
 
-        <!-- Admin Dashboard -->
-        <div id="adminDashboard" class="hidden">
-            <!-- Statistics -->
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="section">
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-content">
                         <div class="stat-icon green">
-                            <svg fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd"/>
+                            <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
                         <div class="stat-info">
                             <p>Actieve Licenties</p>
-                            <p id="activeLicenses">0</p>
+                            <p id="active-count">-</p>
                         </div>
                     </div>
                 </div>
+                
                 <div class="stat-card">
                     <div class="stat-content">
                         <div class="stat-icon red">
-                            <svg fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 10-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 101.06 1.06L12 13.06l1.72 1.72a.75.75 0 101.06-1.06L13.06 12l1.72-1.72a.75.75 0 10-1.06-1.06L12 10.94l-1.72-1.72z" clip-rule="evenodd"/>
+                            <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
                         <div class="stat-info">
                             <p>Inactieve Licenties</p>
-                            <p id="inactiveLicenses">0</p>
+                            <p id="inactive-count">-</p>
                         </div>
                     </div>
                 </div>
+                
                 <div class="stat-card">
                     <div class="stat-content">
                         <div class="stat-icon yellow">
-                            <svg fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd"/>
+                            <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                             </svg>
                         </div>
                         <div class="stat-info">
                             <p>Verlopen Licenties</p>
-                            <p id="expiredLicenses">0</p>
+                            <p id="expired-count">-</p>
                         </div>
                     </div>
                 </div>
+                
                 <div class="stat-card">
                     <div class="stat-content">
                         <div class="stat-icon blue">
-                            <svg fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M7 3a3 3 0 000 6h10a3 3 0 000-6H7zM4 12a3 3 0 106 0v3a3 3 0 11-6 0v-3zm2 0a1 1 0 112 0v3a1 1 0 11-2 0v-3zm8-2a3 3 0 013 3v3a3 3 0 11-6 0v-3a3 3 0 013-3zm1 3a1 1 0 10-2 0v3a1 1 0 102 0v-3z"/>
+                            <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
                         </div>
                         <div class="stat-info">
                             <p>Totaal Licenties</p>
-                            <p id="totalLicenses">0</p>
+                            <p id="total-count">-</p>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
+        <!-- Licenses Section -->
+        <div id="licenses-section" class="section hidden">
             <!-- Create License Form -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-header-icon">
-                        <svg fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clip-rule="evenodd"/>
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 4.5a7.5 7.5 0 100 15 7.5 7.5 0 000-15zM12 2a9 9 0 110 18 9 9 0 010-18zm.75 6a.75.75 0 00-1.5 0v3.25H8a.75.75 0 000 1.5h3.25V16a.75.75 0 001.5 0v-3.25H16a.75.75 0 000-1.5h-3.25V8z"/>
                         </svg>
                     </div>
                     <h2>Nieuwe Licentie Aanmaken</h2>
-                    <p>Maak een nieuwe licentie voor een klant</p>
+                    <p>Maak een nieuwe licentie aan voor een klant</p>
                 </div>
                 
-                <div class="form-group">
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label for="newLicenseKey">Licentie Sleutel:</label>
-                            <input type="text" id="newLicenseKey" placeholder="Laat leeg voor automatische generatie">
-                            <div class="form-help">Laat leeg om automatisch een sleutel te genereren</div>
+                <form id="create-form">
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="license-key">Licentie Sleutel</label>
+                                <input type="text" id="license-key" name="license-key" placeholder="Leeg laten voor automatisch genereren">
+                                <div class="form-help">Laat leeg om automatisch een unieke sleutel te genereren</div>
+                            </div>
+                            <div class="form-field">
+                                <label for="license-type">Licentie Type</label>
+                                <select id="license-type" name="license-type" required>
+                                    <option value="">Selecteer type...</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-field">
-                            <label for="newLicenseType">Type:</label>
-                            <select id="newLicenseType">
-                                <option value="trial">Trial (30 dagen)</option>
-                                <option value="standard">Standard</option>
-                                <option value="premium">Premium</option>
-                                <option value="enterprise">Enterprise</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="customer-name">Klantnaam</label>
+                                <input type="text" id="customer-name" name="customer-name" placeholder="Naam van de klant">
+                            </div>
+                            <div class="form-field">
+                                <label for="customer-email">E-mail Adres</label>
+                                <input type="email" id="customer-email" name="customer-email" placeholder="klant@voorbeeld.nl">
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label for="customerName">Klant Naam:</label>
-                            <input type="text" id="customerName" placeholder="Naam van de klant">
-                        </div>
-                        <div class="form-field">
-                            <label for="customerEmail">Klant Email:</label>
-                            <input type="email" id="customerEmail" placeholder="email@voorbeeld.nl">
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label for="expiresAt">Vervaldatum:</label>
-                            <input type="date" id="expiresAt">
-                            <div class="form-help">Laat leeg voor geen vervaldatum (behalve Trial)</div>
-                        </div>
-                        <div class="form-field">
-                            <label for="notes">Notities:</label>
-                            <input type="text" id="notes" placeholder="Optionele notities">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="expires-at">Vervaldatum</label>
+                                <input type="datetime-local" id="expires-at" name="expires-at">
+                                <div class="form-help">Leeg laten voor permanente licentie</div>
+                            </div>
+                            <div class="form-field">
+                                <label for="notes">Notities</label>
+                                <input type="text" id="notes" name="notes" placeholder="Optionele notities">
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <button type="button" onclick="createLicense()" class="btn btn-success btn-full">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clip-rule="evenodd"/>
-                    </svg>
-                    Licentie Aanmaken
-                </button>
-                
-                <div id="createMessage" class="message hidden"></div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 4.5a7.5 7.5 0 100 15 7.5 7.5 0 000-15zM12 2a9 9 0 110 18 9 9 0 010-18zm.75 6a.75.75 0 00-1.5 0v3.25H8a.75.75 0 000 1.5h3.25V16a.75.75 0 001.5 0v-3.25H16a.75.75 0 000-1.5h-3.25V8z"/>
+                            </svg>
+                            Licentie Aanmaken
+                        </button>
+                        <button type="button" id="create-and-email-btn" class="btn btn-success" disabled>
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
+                            Aanmaken + E-mailen
+                        </button>
+                    </div>
+                </form>
             </div>
 
-            <!-- Search and Filter Controls -->
+            <!-- Search and Filter -->
             <div class="search-container">
                 <div class="search-input-wrapper">
                     <svg class="search-icon" fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z" clip-rule="evenodd"/>
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
-                    <input type="text" id="searchInput" class="search-input" placeholder="Zoek op naam, email of licentie sleutel...">
-                    <button type="button" onclick="performSearch()" class="search-btn">
+                    <input type="text" id="search-input" class="search-input" placeholder="Zoek op licentie sleutel, klantnaam of e-mail...">
+                    <button class="search-btn" onclick="searchLicenses()">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z" clip-rule="evenodd"/>
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
                         Zoeken
                     </button>
                 </div>
                 
                 <div class="filter-buttons">
-                    <button type="button" onclick="filterLicenses('all')" class="filter-btn active" id="filter-all">Alle</button>
-                    <button type="button" onclick="filterLicenses('trial')" class="filter-btn" id="filter-trial">Trial</button>
-                    <button type="button" onclick="filterLicenses('standard')" class="filter-btn" id="filter-standard">Standard</button>
-                    <button type="button" onclick="filterLicenses('premium')" class="filter-btn" id="filter-premium">Premium</button>
-                    <button type="button" onclick="filterLicenses('enterprise')" class="filter-btn" id="filter-enterprise">Enterprise</button>
-                    <button type="button" onclick="clearFilters()" class="filter-btn clear-filters-btn">
+                    <button class="filter-btn active" data-filter="all">Alle</button>
+                    <button class="filter-btn" data-filter="active">Actief</button>
+                    <button class="filter-btn" data-filter="inactive">Inactief</button>
+                    <button class="filter-btn" data-filter="expired">Verlopen</button>
+                    <button class="clear-filters-btn" onclick="clearFilters()">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd"/>
+                            <path d="M6 18L18 6M6 6l12 12"/>
                         </svg>
-                        Wissen
+                        Wis filters
                     </button>
                 </div>
             </div>
 
-            <!-- Filter Statistics -->
-            <div class="filter-stats">
-                <div class="filter-stats-item">
-                    <span class="filter-stats-number" id="filteredCount">0</span>
-                    <span class="filter-stats-label">van</span>
-                    <span class="filter-stats-number" id="totalCount">0</span>
-                    <span class="filter-stats-label">licenties getoond</span>
-                </div>
-            </div>
-
-            <!-- License Table -->
-            <div style="margin-top: 3rem;"></div>
+            <!-- Licenses Table -->
             <div class="table-container">
                 <div class="table-header">
                     <div>
-                        <h2>Bestaande Licenties</h2>
-                        <p>Overzicht van alle licenties in het systeem</p>
+                        <h2>Licenties Overzicht</h2>
+                        <p>Beheer alle InnoDIGI licenties</p>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <select id="pageSizeSelect" onchange="changePageSize()" class="pagination-select">
-                            <option value="25">25 per pagina</option>
-                            <option value="50">50 per pagina</option>
-                            <option value="100">100 per pagina</option>
-                            <option value="all">Alle items</option>
-                        </select>
-                        <button type="button" onclick="loadLicenses()" class="btn btn-secondary">
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clip-rule="evenodd"/>
-                            </svg>
-                            Vernieuwen
-                        </button>
-                    </div>
+                    <button class="btn btn-secondary" onclick="loadLicenses()">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        Vernieuwen
+                    </button>
                 </div>
                 
                 <div class="table-wrapper">
-                    <table id="licenseTable">
+                    <table id="licenses-table">
                         <thead>
                             <tr>
-                                <th class="sortable" onclick="sortTable('license_key')">
-                                    Sleutel
-                                </th>
-                                <th class="sortable" onclick="sortTable('customer')">
-                                    Klant
-                                </th>
-                                <th class="sortable" onclick="sortTable('license_type')">
-                                    Type
-                                </th>
-                                <th class="sortable" onclick="sortTable('status')">
-                                    Status
-                                </th>
-                                <th class="sortable" onclick="sortTable('expires_at')">
-                                    Verloopt
-                                </th>
-                                <th class="sortable" onclick="sortTable('last_checked')">
-                                    Laatst Gecontroleerd
-                                </th>
+                                <th class="sortable" data-column="license_key">Licentie Sleutel</th>
+                                <th class="sortable" data-column="license_type">Type</th>
+                                <th class="sortable" data-column="customer_name">Klant</th>
+                                <th class="sortable" data-column="customer_email">E-mail</th>
+                                <th class="sortable" data-column="status">Status</th>
+                                <th class="sortable" data-column="created_at">Aangemaakt</th>
+                                <th class="sortable" data-column="expires_at">Verloopt</th>
+                                <th class="sortable" data-column="last_checked">Laatst Gecontroleerd</th>
                                 <th>Acties</th>
                             </tr>
                         </thead>
-                        <tbody id="licenseTableBody">
+                        <tbody id="licenses-tbody">
                             <tr>
-                                <td colspan="7" class="loading">
+                                <td colspan="9" class="loading">
                                     <div class="spinner"></div>
                                     Licenties laden...
                                 </td>
@@ -273,795 +261,998 @@
                     </table>
                 </div>
                 
-                <!-- Pagination Controls -->
-                <div id="paginationControls" class="pagination-controls">
+                <div class="pagination-controls">
                     <div class="pagination-info">
-                        <span id="paginationInfo">Geen licenties</span>
+                        Toont <span id="page-info">0-0 van 0</span> licenties
                     </div>
+                    
                     <div class="pagination-buttons">
-                        <button type="button" id="firstPageBtn" onclick="goToPage(1)" class="pagination-btn" disabled>
+                        <button class="pagination-btn" id="prev-btn" onclick="prevPage()" disabled>
                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z" clip-rule="evenodd"/>
-                                <path fill-rule="evenodd" d="M2.25 12a.75.75 0 01.75-.75h18a.75.75 0 010 1.5H3a.75.75 0 01-.75-.75z" clip-rule="evenodd"/>
-                            </svg>
-                            Eerste
-                        </button>
-                        <button type="button" id="prevPageBtn" onclick="goToPage(currentPage - 1)" class="pagination-btn" disabled>
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z" clip-rule="evenodd"/>
+                                <path d="M15 18l-6-6 6-6"/>
                             </svg>
                             Vorige
                         </button>
-                        <div id="pageNumbers" class="page-numbers">
-                            <!-- Page numbers will be inserted here -->
-                        </div>
-                        <button type="button" id="nextPageBtn" onclick="goToPage(currentPage + 1)" class="pagination-btn" disabled>
+                        
+                        <div class="page-numbers" id="page-numbers"></div>
+                        
+                        <button class="pagination-btn" id="next-btn" onclick="nextPage()" disabled>
                             Volgende
                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z" clip-rule="evenodd"/>
-                            </svg>
-                        </button>
-                        <button type="button" id="lastPageBtn" onclick="goToPage(totalPages)" class="pagination-btn" disabled>
-                            Laatste
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z" clip-rule="evenodd"/>
-                                <path fill-rule="evenodd" d="M21.75 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h18a.75.75 0 01.75.75z" clip-rule="evenodd"/>
+                                <path d="M9 18l6-6-6-6"/>
                             </svg>
                         </button>
                     </div>
+                    
+                    <select class="pagination-select" id="page-size" onchange="changePageSize()">
+                        <option value="10">10 per pagina</option>
+                        <option value="25" selected>25 per pagina</option>
+                        <option value="50">50 per pagina</option>
+                        <option value="100">100 per pagina</option>
+                    </select>
                 </div>
             </div>
-      <div style="margin-top: 3rem;"></div>
-            <!-- Terms Management -->
+        </div>
+
+        <!-- License Types Section -->
+        <div id="license-types-section" class="section hidden">
             <div class="card">
                 <div class="card-header">
                     <div class="card-header-icon">
-                        <svg fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0016.5 9h-1.875a1.875 1.875 0 01-1.875-1.875V5.25A3.75 3.75 0 009 1.5H5.625zM7.5 15a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 017.5 15zm.75 2.25a.75.75 0 000 1.5H12a.75.75 0 000-1.5H8.25z" clip-rule="evenodd"/>
-                            <path d="M12.971 1.816A5.23 5.23 0 0114.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 013.434 1.279 9.768 9.768 0 00-6.963-6.963z"/>
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 11H7v4h2v-4zm4 0h-2v4h2v-4zm4 0h-2v4h2v-4zm2-7h-2V2h-2v2H9V2H7v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z"/>
                         </svg>
                     </div>
-                    <h2>Licentievoorwaarden Beheer</h2>
-                    <p>Beheer de licentievoorwaarden die getoond worden aan gebruikers</p>
+                    <h2>Licentietypes Beheer</h2>
+                    <p>Beheer de beschikbare licentietypes voor je systeem</p>
                 </div>
                 
-                <div class="form-group">
-                    <div id="termsEditor" style="min-height: 200px; border: 1px solid #d1d5db; border-radius: 0.5rem;"></div>
+                <div id="license-types-container">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Licentietypes laden...
+                    </div>
                 </div>
-                <div id="termsMessage" class="message hidden"></div>
-                <div class="flex gap-2 mt-4">
-                    <button type="button" onclick="loadTerms()" class="btn btn-secondary">
+                
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="addLicenseType()">
                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clip-rule="evenodd"/>
+                            <path d="M12 4.5a7.5 7.5 0 100 15 7.5 7.5 0 000-15zM12 2a9 9 0 110 18 9 9 0 010-18zm.75 6a.75.75 0 00-1.5 0v3.25H8a.75.75 0 000 1.5h3.25V16a.75.75 0 001.5 0v-3.25H16a.75.75 0 000-1.5h-3.25V8z"/>
                         </svg>
-                        Laden
+                        Nieuw Type Toevoegen
                     </button>
-                    <button type="button" onclick="saveTerms()" class="btn btn-success flex-1">
+                    <button class="btn btn-success" onclick="saveLicenseTypes()">
                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd"/>
+                            <path d="M7 19v-2l7.5-7.5 2 2L9 19H7zm10.5-10.5l2-2-2-2-2 2 2 2z"/>
                         </svg>
                         Opslaan
                     </button>
-                    <button type="button" onclick="previewTerms()" class="btn btn-ghost">
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/>
-                            <path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z" clip-rule="evenodd"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Template Section -->
+        <div id="email-template-section" class="section hidden">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                         </svg>
-                        Voorbeeld
+                    </div>
+                    <h2>E-mail Template Beheer</h2>
+                    <p>Configureer de e-mail template die wordt gebruikt bij het versturen van licenties</p>
+                </div>
+                
+                <form id="email-template-form">
+                    <div class="form-group">
+                        <div class="form-field">
+                            <label for="email-subject">E-mail Onderwerp</label>
+                            <input type="text" id="email-subject" name="subject" placeholder="Uw InnoDIGI Licentie - {{license_key}}">
+                            <div class="form-help">Beschikbare variabelen: {{customer_name}}, {{license_key}}, {{license_type}}, {{status}}, {{expires_at}}, {{created_at}}, {{notes}}</div>
+                        </div>
+                        <div class="form-field">
+                            <label for="email-body">E-mail Inhoud</label>
+                            <textarea id="email-body" name="body" rows="12" placeholder="E-mail inhoud..."></textarea>
+                            <div class="form-help">Gebruik dezelfde variabelen als hierboven. Tekst wordt verzonden als platte tekst.</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-success">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 19v-2l7.5-7.5 2 2L9 19H7zm10.5-10.5l2-2-2-2-2 2 2 2z"/>
+                            </svg>
+                            Template Opslaan
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="loadEmailTemplate()">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            Herladen
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- SMTP Settings Section -->
+        <div id="smtp-settings-section" class="section hidden">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <h2>SMTP Instellingen</h2>
+                    <p>Configureer de SMTP server voor het versturen van e-mails</p>
+                </div>
+                
+                <form id="smtp-settings-form">
+                    <div class="form-group">
+                        <div class="form-field">
+                            <label for="smtp-enabled">
+                                <input type="checkbox" id="smtp-enabled" name="enabled" checked> SMTP Ingeschakeld
+                            </label>
+                            <div class="form-help">Uitschakelen om PHP mail() te gebruiken als fallback</div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="smtp-host">SMTP Server</label>
+                                <input type="text" id="smtp-host" name="host" placeholder="mail.innodigi.nl" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="smtp-port">Poort</label>
+                                <input type="number" id="smtp-port" name="port" placeholder="587" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="smtp-security">Beveiliging</label>
+                                <select id="smtp-security" name="security" required>
+                                    <option value="">Geen versleuteling</option>
+                                    <option value="tls">TLS (aanbevolen)</option>
+                                    <option value="ssl">SSL</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="smtp-username">Gebruikersnaam</label>
+                                <input type="text" id="smtp-username" name="username" placeholder="noreply@innodigi.nl">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="smtp-password">Wachtwoord</label>
+                                <input type="password" id="smtp-password" name="password" placeholder="••••••••">
+                                <div class="form-help">Laat leeg om huidige wachtwoord te behouden</div>
+                            </div>
+                            <div class="form-field">
+                                <label for="smtp-from-email">Van E-mail</label>
+                                <input type="email" id="smtp-from-email" name="from_email" placeholder="noreply@innodigi.nl" required>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="smtp-from-name">Van Naam</label>
+                            <input type="text" id="smtp-from-name" name="from_name" placeholder="InnoDIGI License System" required>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-success">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 19v-2l7.5-7.5 2 2L9 19H7zm10.5-10.5l2-2-2-2-2 2 2 2z"/>
+                            </svg>
+                            SMTP Opslaan
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="loadSMTPSettings()">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            Herladen
+                        </button>
+                        <button type="button" class="btn btn-ghost" onclick="testSMTP()">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
+                            Test E-mail
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Terms Section -->
+        <div id="terms-section" class="section hidden">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM16 18H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                    </div>
+                    <h2>Licentievoorwaarden</h2>
+                    <p>Beheer de algemene voorwaarden die bij licenties horen</p>
+                </div>
+                
+                <div id="terms-editor-container">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Voorwaarden laden...
+                    </div>
+                </div>
+                
+                <div style="margin-top: 1rem;">
+                    <button class="btn btn-success" onclick="saveTerms()">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M7 19v-2l7.5-7.5 2 2L9 19H7zm10.5-10.5l2-2-2-2-2 2 2 2z"/>
+                        </svg>
+                        Voorwaarden Opslaan
                     </button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Edit License Modal -->
-    <div id="editModal" class="modal">
-        <div class="modal-content" style="max-width: 35rem;">
-            <div class="modal-header">
-                <div class="modal-icon" style="background: #dbeafe;">
-                    <svg fill="currentColor" viewBox="0 0 24 24" style="color: #2563eb;">
-                        <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"/>
-                        <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"/>
-                    </svg>
-                </div>
-                <h3>Licentie Bewerken</h3>
-                <p>Wijzig de gegevens van deze licentie</p>
-            </div>
-            
-            <div class="form-group">
-                <div class="form-row">
-                    <div class="form-field">
-                        <label for="editLicenseKey">Licentie Sleutel:</label>
-                        <input type="text" id="editLicenseKey" readonly class="font-mono">
+        <!-- Success/Error Messages -->
+        <div id="message" class="message hidden">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span id="message-text"></span>
+        </div>
+
+        <!-- Edit License Modal -->
+        <div id="edit-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M7 19v-2l7.5-7.5 2 2L9 19H7zm10.5-10.5l2-2-2-2-2 2 2 2z"/>
+                        </svg>
                     </div>
-                    <div class="form-field">
-                        <label for="editLicenseType">Type:</label>
-                        <select id="editLicenseType">
-                            <option value="trial">Trial (30 dagen)</option>
-                            <option value="standard">Standard</option>
-                            <option value="premium">Premium</option>
-                            <option value="enterprise">Enterprise</option>
-                        </select>
-                    </div>
+                    <h3>Licentie Bewerken</h3>
+                    <p>Wijzig de eigenschappen van deze licentie</p>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-field">
-                        <label for="editCustomerName">Klant Naam:</label>
-                        <input type="text" id="editCustomerName" placeholder="Naam van de klant">
+                <form id="edit-form">
+                    <input type="hidden" id="edit-license-key" name="license-key">
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="edit-license-type">Type</label>
+                                <select id="edit-license-type" name="license-type" required>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="edit-status">Status</label>
+                                <select id="edit-status" name="status" required>
+                                    <option value="active">Actief</option>
+                                    <option value="inactive">Inactief</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="edit-customer-name">Klantnaam</label>
+                                <input type="text" id="edit-customer-name" name="customer-name">
+                            </div>
+                            <div class="form-field">
+                                <label for="edit-customer-email">E-mail</label>
+                                <input type="email" id="edit-customer-email" name="customer-email">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="edit-expires-at">Vervaldatum</label>
+                                <input type="datetime-local" id="edit-expires-at" name="expires-at">
+                            </div>
+                            <div class="form-field">
+                                <label for="edit-notes">Notities</label>
+                                <input type="text" id="edit-notes" name="notes">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-field">
-                        <label for="editCustomerEmail">Klant Email:</label>
-                        <input type="email" id="editCustomerEmail" placeholder="email@voorbeeld.nl">
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Annuleren</button>
+                        <button type="submit" class="btn btn-primary">Opslaan</button>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-field">
-                        <label for="editStatus">Status:</label>
-                        <select id="editStatus">
-                            <option value="active">Actief</option>
-                            <option value="inactive">Inactief</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
-                        <label for="editExpiresAt">Vervaldatum:</label>
-                        <input type="date" id="editExpiresAt">
-                        <div class="form-help">Laat leeg voor geen vervaldatum</div>
-                    </div>
-                </div>
-                
-                <div class="form-field">
-                    <label for="editNotes">Notities:</label>
-                    <input type="text" id="editNotes" placeholder="Optionele notities">
-                </div>
-            </div>
-            
-            <div class="modal-actions">
-                <button type="button" onclick="closeEditModal()" class="btn btn-secondary">Annuleren</button>
-                <button type="button" onclick="saveEditLicense()" class="btn btn-success">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd"/>
-                    </svg>
-                    Opslaan
-                </button>
+                </form>
             </div>
         </div>
-    </div>
-  <div style="margin-bottom: 30px; margin-top: -30px; text-align: center;">Software copyrighted by InnoDIGI, Rosmalen - Licensed to Booth Kings V.O.F.</div>
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-icon">
-                    <svg fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd"/>
-                    </svg>
-                </div>
-                <h3>Licentie Verwijderen</h3>
-                <p>Weet je zeker dat je deze licentie wilt verwijderen? Deze actie kan niet ongedaan gemaakt worden.</p>
-            </div>
-            <div class="modal-actions">
-                <button type="button" onclick="closeDeleteModal()" class="btn btn-secondary">Annuleren</button>
-                <button type="button" onclick="confirmDelete()" class="btn btn-danger">Verwijderen</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- Terms Preview Modal -->
-    <div id="termsModal" class="modal">
-        <div class="modal-content" style="max-width: 50rem;">
-            <div class="modal-header">
-                <div class="modal-icon" style="background: #dbeafe;">
-                    <svg fill="currentColor" viewBox="0 0 24 24" style="color: #2563eb;">
-                        <path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0016.5 9h-1.875a1.875 1.875 0 01-1.875-1.875V5.25A3.75 3.75 0 009 1.5H5.625zM7.5 15a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 017.5 15zm.75 2.25a.75.75 0 000 1.5H12a.75.75 0 000-1.5H8.25z" clip-rule="evenodd"/>
-                        <path d="M12.971 1.816A5.23 5.23 0 0114.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 013.434 1.279 9.768 9.768 0 00-6.963-6.963z"/>
-                    </svg>
+        <!-- Delete Confirmation Modal -->
+        <div id="delete-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <h3>Licentie Verwijderen</h3>
+                    <p>Weet je zeker dat je deze licentie wilt verwijderen? Deze actie kan niet ongedaan gemaakt worden.</p>
                 </div>
-                <h3>Voorbeeld Licentievoorwaarden</h3>
-            </div>
-            <div id="termsContent" style="max-height: 400px; overflow-y: auto; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; margin: 1rem 0; background: #f9fafb;">
-                <!-- Terms content will be loaded here -->
-            </div>
-            <div class="modal-actions">
-                <button type="button" onclick="closeTermsModal()" class="btn btn-secondary w-full">Sluiten</button>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Annuleren</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Verwijderen</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="quill.min.js"></script>
     <script>
-        let adminKey = '';
-        let allLicenses = [];
+        // Global variables
+        let currentLicenses = [];
         let filteredLicenses = [];
-        let currentFilter = 'all';
-        let currentSearchTerm = '';
-        let sortColumn = '';
-        let sortDirection = 'asc';
-        let licenseToDelete = null;
-        let licenseToEdit = null;
-        let termsEditor = null;
-        
-        // Pagination variables
         let currentPage = 1;
         let pageSize = 25;
-        let totalPages = 1;
-        let paginatedLicenses = [];
+        let sortColumn = 'created_at';
+        let sortDirection = 'desc';
+        let currentFilter = 'all';
+        let searchTerm = '';
+        let licenseTypes = {};
+        let editingLicenseKey = null;
+        let termsEditor = null;
 
-        // Initialize
+        const ADMIN_KEY = 'INNODIGI_admin2025!';
+
+        // Initialize application
         document.addEventListener('DOMContentLoaded', function() {
-            // Allow Enter key for login
-            document.getElementById('adminKey').addEventListener('keypress', function(e) {
+            loadLicenseTypes().then(() => {
+                loadLicenses();
+            });
+            loadEmailTemplate();
+            loadSMTPSettings();
+            loadTerms();
+            updateDashboardStats();
+            
+            // Event listeners
+            document.getElementById('create-form').addEventListener('submit', createLicense);
+            document.getElementById('create-and-email-btn').addEventListener('click', createAndEmailLicense);
+            document.getElementById('edit-form').addEventListener('submit', updateLicense);
+            document.getElementById('email-template-form').addEventListener('submit', saveEmailTemplate);
+            document.getElementById('smtp-settings-form').addEventListener('submit', saveSMTPSettings);
+            document.getElementById('customer-email').addEventListener('input', toggleCreateEmailBtn);
+            
+            // Search functionality
+            document.getElementById('search-input').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    login();
+                    searchLicenses();
                 }
             });
-
-            // Allow Enter key for search
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
+            
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    setFilter(this.dataset.filter);
+                });
             });
-
-            // Initialize terms editor
-            termsEditor = new Quill('#termsEditor', {
-                placeholder: 'Voer hier de licentievoorwaarden in...'
+            
+            // Table sorting
+            document.querySelectorAll('#licenses-table th.sortable').forEach(th => {
+                th.addEventListener('click', function() {
+                    sortTable(this.dataset.column);
+                });
             });
         });
 
-        // Authentication
-        function login() {
-            const key = document.getElementById('adminKey').value;
-            const messageEl = document.getElementById('loginMessage');
+        // Show/Hide sections
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
             
-            if (!key) {
-                showMessage(messageEl, 'Voer een admin sleutel in', 'error');
+            // Reset navigation buttons
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-secondary');
+            });
+            
+            // Show selected section
+            document.getElementById(section + '-section').classList.remove('hidden');
+            
+            // Update active button
+            event.target.classList.remove('btn-secondary');
+            event.target.classList.add('btn-primary');
+        }
+
+        // API Functions
+        async function apiCall(data) {
+            try {
+                const response = await fetch('index.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({...data, admin_key: ADMIN_KEY})
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                showMessage('API fout: ' + error.message, 'error');
+                return null;
+            }
+        }
+
+        // Load license types
+        async function loadLicenseTypes() {
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'get_license_types'
+            });
+            
+            if (result && result.license_types) {
+                licenseTypes = result.license_types;
+                populateLicenseTypeSelects();
+                renderLicenseTypesEditor();
+            }
+        }
+
+        function populateLicenseTypeSelects() {
+            const selects = ['license-type', 'edit-license-type'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    select.innerHTML = '<option value="">Selecteer type...</option>';
+                    Object.entries(licenseTypes).forEach(([key, name]) => {
+                        select.innerHTML += `<option value="${key}">${name}</option>`;
+                    });
+                }
+            });
+        }
+
+        function renderLicenseTypesEditor() {
+            const container = document.getElementById('license-types-container');
+            container.innerHTML = '';
+            
+            Object.entries(licenseTypes).forEach(([key, name]) => {
+                const div = document.createElement('div');
+                div.className = 'form-row mb-2';
+                div.innerHTML = `
+                    <div class="form-field">
+                        <label>Type Sleutel</label>
+                        <input type="text" value="${key}" data-key="${key}" class="type-key" readonly>
+                    </div>
+                    <div class="form-field">
+                        <label>Naam</label>
+                        <input type="text" value="${name}" data-key="${key}" class="type-name">
+                    </div>
+                    <div style="display: flex; align-items: end;">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeLicenseType('${key}')">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function addLicenseType() {
+            const key = prompt('Nieuwe type sleutel (bijv. "basic"):');
+            if (key && !licenseTypes[key]) {
+                licenseTypes[key] = key.charAt(0).toUpperCase() + key.slice(1);
+                renderLicenseTypesEditor();
+            }
+        }
+
+        function removeLicenseType(key) {
+            if (confirm('Weet je zeker dat je dit licentietype wilt verwijderen?')) {
+                delete licenseTypes[key];
+                renderLicenseTypesEditor();
+            }
+        }
+
+        async function saveLicenseTypes() {
+            // Collect updated values
+            const updatedTypes = {};
+            document.querySelectorAll('.type-name').forEach(input => {
+                const key = input.dataset.key;
+                updatedTypes[key] = input.value;
+            });
+            
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'save_license_types',
+                license_types: updatedTypes
+            });
+            
+            if (result && result.success) {
+                licenseTypes = updatedTypes;
+                populateLicenseTypeSelects();
+                showMessage('Licentietypes opgeslagen', 'success');
+            }
+        }
+
+        // Load licenses
+        async function loadLicenses() {
+            const tbody = document.getElementById('licenses-tbody');
+            tbody.innerHTML = '<tr><td colspan="9" class="loading"><div class="spinner"></div>Licenties laden...</td></tr>';
+            
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'list'
+            });
+            
+            if (result && result.licenses) {
+                currentLicenses = result.licenses;
+                filteredLicenses = [...currentLicenses];
+                applyFilters();
+                updateDashboardStats();
+            } else {
+                tbody.innerHTML = '<tr><td colspan="9" class="empty-state">Geen licenties gevonden</td></tr>';
+            }
+        }
+
+        // Create license
+        async function createLicense(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            const licenseData = {
+                action: 'admin',
+                sub_action: 'create',
+                license_key: formData.get('license-key') || undefined,
+                license_type: formData.get('license-type'),
+                customer_name: formData.get('customer-name'),
+                customer_email: formData.get('customer-email'),
+                expires_at: formData.get('expires-at') || null,
+                notes: formData.get('notes')
+            };
+            
+            const result = await apiCall(licenseData);
+            
+            if (result && result.success) {
+                showMessage(`Licentie aangemaakt: ${result.license_key}`, 'success');
+                form.reset();
+                loadLicenses();
+            }
+        }
+
+        async function createAndEmailLicense(e) {
+            e.preventDefault();
+            const form = document.getElementById('create-form');
+            const formData = new FormData(form);
+            
+            const customerEmail = formData.get('customer-email');
+            if (!customerEmail) {
+                showMessage('E-mail adres is verplicht voor direct verzenden', 'error');
                 return;
             }
             
-            adminKey = key;
-            
-            // Test with a simple API call
-            fetch('index.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'admin',
-                    sub_action: 'list',
-                    admin_key: adminKey
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    showMessage(messageEl, 'Ongeldige admin sleutel', 'error');
-                } else {
-                    document.getElementById('loginSection').style.display = 'none';
-                    document.getElementById('adminDashboard').classList.remove('hidden');
-                    loadLicenses();
-                    loadTerms();
-                }
-            })
-            .catch(error => {
-                showMessage(messageEl, 'Verbindingsfout', 'error');
-            });
-        }
-
-        // License Management
-        function loadLicenses() {
-            fetch('index.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'admin',
-                    sub_action: 'list',
-                    admin_key: adminKey
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.licenses) {
-                    allLicenses = data.licenses;
-                    applyFiltersAndSearch();
-                    updateStatistics();
-                }
-            })
-            .catch(error => {
-                console.error('Error loading licenses:', error);
-            });
-        }
-
-        function createLicense() {
-            const licenseKey = document.getElementById('newLicenseKey').value;
-            const licenseType = document.getElementById('newLicenseType').value;
-            const customerName = document.getElementById('customerName').value;
-            const customerEmail = document.getElementById('customerEmail').value;
-            const expiresAt = document.getElementById('expiresAt').value;
-            const notes = document.getElementById('notes').value;
-            const messageEl = document.getElementById('createMessage');
-            
-            const payload = {
+            // First create the license
+            const licenseData = {
                 action: 'admin',
                 sub_action: 'create',
-                admin_key: adminKey,
-                license_type: licenseType,
-                customer_name: customerName,
+                license_key: formData.get('license-key') || undefined,
+                license_type: formData.get('license-type'),
+                customer_name: formData.get('customer-name'),
                 customer_email: customerEmail,
-                notes: notes
+                expires_at: formData.get('expires-at') || null,
+                notes: formData.get('notes')
             };
             
-            if (licenseKey) payload.license_key = licenseKey;
-            if (expiresAt) payload.expires_at = expiresAt + ' 23:59:00';
+            const createResult = await apiCall(licenseData);
             
-            fetch('index.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showMessage(messageEl, `Licentie aangemaakt: ${data.license_key}`, 'success');
-                    clearCreateForm();
-                    loadLicenses();
+            if (createResult && createResult.success) {
+                // Then send the email
+                const emailResult = await apiCall({
+                    action: 'admin',
+                    sub_action: 'send_license_email',
+                    license_key: createResult.license_key
+                });
+                
+                if (emailResult && emailResult.success) {
+                    showMessage(`Licentie aangemaakt en gemaild: ${createResult.license_key}`, 'success');
                 } else {
-                    showMessage(messageEl, data.error || 'Fout bij aanmaken licentie', 'error');
+                    showMessage(`Licentie aangemaakt maar e-mail kon niet verzonden worden: ${createResult.license_key}`, 'error');
                 }
-            })
-            .catch(error => {
-                showMessage(messageEl, 'Verbindingsfout', 'error');
-            });
+                
+                form.reset();
+                toggleCreateEmailBtn();
+                loadLicenses();
+            }
         }
 
-        function clearCreateForm() {
-            document.getElementById('newLicenseKey').value = '';
-            document.getElementById('newLicenseType').value = 'trial';
-            document.getElementById('customerName').value = '';
-            document.getElementById('customerEmail').value = '';
-            document.getElementById('expiresAt').value = '';
-            document.getElementById('notes').value = '';
+        function toggleCreateEmailBtn() {
+            const emailInput = document.getElementById('customer-email');
+            const emailBtn = document.getElementById('create-and-email-btn');
+            emailBtn.disabled = !emailInput.value.trim();
         }
 
-        function updateLicense(licenseKey, field, value) {
-            const payload = {
+        // Update license
+        async function updateLicense(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            const updateData = {
                 action: 'admin',
                 sub_action: 'update',
-                admin_key: adminKey,
-                license_key: licenseKey
+                license_key: editingLicenseKey,
+                license_type: formData.get('license-type'),
+                status: formData.get('status'),
+                customer_name: formData.get('customer-name'),
+                customer_email: formData.get('customer-email'),
+                expires_at: formData.get('expires-at') || null,
+                notes: formData.get('notes')
             };
             
-            payload[field] = value;
+            const result = await apiCall(updateData);
             
-            fetch('index.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    loadLicenses();
-                } else {
-                    alert('Fout bij bijwerken: ' + (data.error || 'Onbekende fout'));
-                }
-            })
-            .catch(error => {
-                alert('Verbindingsfout');
-            });
+            if (result && result.success) {
+                showMessage('Licentie bijgewerkt', 'success');
+                closeEditModal();
+                loadLicenses();
+            }
         }
+
+        // Delete license
+        let deletingLicenseKey = null;
 
         function deleteLicense(licenseKey) {
-            licenseToDelete = licenseKey;
-            document.getElementById('deleteModal').classList.add('show');
+            deletingLicenseKey = licenseKey;
+            document.getElementById('delete-modal').classList.add('show');
         }
 
-        function confirmDelete() {
-            if (!licenseToDelete) return;
-            
-            fetch('index.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+        async function confirmDelete() {
+            if (deletingLicenseKey) {
+                const result = await apiCall({
                     action: 'admin',
                     sub_action: 'delete',
-                    admin_key: adminKey,
-                    license_key: licenseToDelete
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    loadLicenses();
-                    closeDeleteModal();
-                } else {
-                    alert('Fout bij verwijderen: ' + (data.error || 'Onbekende fout'));
-                }
-            })
-            .catch(error => {
-                alert('Verbindingsfout');
-            });
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.remove('show');
-            licenseToDelete = null;
-        }
-
-        // Edit License Functions
-        function editLicense(licenseKey) {
-            const license = allLicenses.find(l => l.license_key === licenseKey);
-            if (!license) return;
-            
-            licenseToEdit = licenseKey;
-            
-            // Populate form
-            document.getElementById('editLicenseKey').value = license.license_key;
-            document.getElementById('editLicenseType').value = license.license_type;
-            document.getElementById('editCustomerName').value = license.customer_name || '';
-            document.getElementById('editCustomerEmail').value = license.customer_email || '';
-            document.getElementById('editStatus').value = license.status;
-            
-            // Handle expires_at date formatting
-            if (license.expires_at) {
-                // Convert "YYYY-MM-DD HH:MM:SS" to "YYYY-MM-DD"
-                const dateOnly = license.expires_at.split(' ')[0];
-                document.getElementById('editExpiresAt').value = dateOnly;
-            } else {
-                document.getElementById('editExpiresAt').value = '';
-            }
-            
-            document.getElementById('editNotes').value = license.notes || '';
-            
-            document.getElementById('editModal').classList.add('show');
-        }
-
-        function saveEditLicense() {
-            if (!licenseToEdit) return;
-            
-            // Handle expires_at formatting
-            let expiresAt = document.getElementById('editExpiresAt').value;
-            if (expiresAt) {
-                // Add time 23:59:00 to the date
-                expiresAt = expiresAt + ' 23:59:00';
-            } else {
-                expiresAt = null;
-            }
-            
-            const payload = {
-                action: 'admin',
-                sub_action: 'update',
-                admin_key: adminKey,
-                license_key: licenseToEdit,
-                license_type: document.getElementById('editLicenseType').value,
-                customer_name: document.getElementById('editCustomerName').value,
-                customer_email: document.getElementById('editCustomerEmail').value,
-                status: document.getElementById('editStatus').value,
-                expires_at: expiresAt,
-                notes: document.getElementById('editNotes').value
-            };
-            
-            fetch('index.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    loadLicenses();
-                    closeEditModal();
-                } else {
-                    alert('Fout bij bijwerken: ' + (data.error || 'Onbekende fout'));
-                }
-            })
-            .catch(error => {
-                alert('Verbindingsfout');
-            });
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').classList.remove('show');
-            licenseToEdit = null;
-        }
-
-        // Search and Filter Functions
-        function performSearch() {
-            currentSearchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            applyFiltersAndSearch();
-        }
-
-        function filterLicenses(filterType) {
-            currentFilter = filterType;
-            
-            // Update active filter button
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.getElementById('filter-' + filterType).classList.add('active');
-            
-            applyFiltersAndSearch();
-        }
-
-        function clearFilters() {
-            currentFilter = 'all';
-            currentSearchTerm = '';
-            document.getElementById('searchInput').value = '';
-            
-            // Reset active filter button
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.getElementById('filter-all').classList.add('active');
-            
-            applyFiltersAndSearch();
-        }
-
-        function applyFiltersAndSearch() {
-            let filtered = [...allLicenses];
-            
-            // Apply search filter
-            if (currentSearchTerm) {
-                filtered = filtered.filter(license => {
-                    const searchFields = [
-                        license.license_key || '',
-                        license.customer_name || '',
-                        license.customer_email || ''
-                    ].join(' ').toLowerCase();
-                    
-                    return searchFields.includes(currentSearchTerm);
+                    license_key: deletingLicenseKey
                 });
+                
+                if (result && result.success) {
+                    showMessage('Licentie verwijderd', 'success');
+                    loadLicenses();
+                }
             }
-            
-            // Apply type filter
-            if (currentFilter !== 'all') {
-                filtered = filtered.filter(license => license.license_type === currentFilter);
-            }
-            
-            filteredLicenses = filtered;
-            
-            // Reset to first page when filters change
-            currentPage = 1;
-            updatePagination();
-            updateFilterStats();
+            closeDeleteModal();
         }
 
-        // Pagination Functions
-        function changePageSize() {
-            const newSize = document.getElementById('pageSizeSelect').value;
-            pageSize = newSize === 'all' ? filteredLicenses.length : parseInt(newSize);
-            currentPage = 1; // Reset to first page
-            updatePagination();
+        // Send license email
+        async function sendLicenseEmail(licenseKey) {
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'send_license_email',
+                license_key: licenseKey
+            });
+            
+            if (result && result.success) {
+                showMessage('E-mail verzonden', 'success');
+            }
         }
 
-        function goToPage(page) {
-            if (page < 1 || page > totalPages) return;
-            currentPage = page;
+        // Email template functions
+        async function loadEmailTemplate() {
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'get_email_template'
+            });
+            
+            if (result && result.template) {
+                document.getElementById('email-subject').value = result.template.subject || '';
+                document.getElementById('email-body').value = result.template.body || '';
+            }
+        }
+
+        async function saveEmailTemplate(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'save_email_template',
+                subject: formData.get('subject'),
+                body: formData.get('body')
+            });
+            
+            if (result && result.success) {
+                showMessage('E-mail template opgeslagen', 'success');
+            }
+        }
+
+        // SMTP settings functions
+        async function loadSMTPSettings() {
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'get_smtp_settings'
+            });
+            
+            if (result && result.settings) {
+                const settings = result.settings;
+                document.getElementById('smtp-enabled').checked = settings.enabled !== false;
+                document.getElementById('smtp-host').value = settings.host || '';
+                document.getElementById('smtp-port').value = settings.port || 587;
+                document.getElementById('smtp-security').value = settings.security || 'tls';
+                document.getElementById('smtp-username').value = settings.username || '';
+                document.getElementById('smtp-password').value = settings.password || '';
+                document.getElementById('smtp-from-email').value = settings.from_email || '';
+                document.getElementById('smtp-from-name').value = settings.from_name || '';
+            }
+        }
+
+        async function saveSMTPSettings(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'save_smtp_settings',
+                enabled: formData.get('enabled') === 'on',
+                host: formData.get('host'),
+                port: parseInt(formData.get('port')),
+                security: formData.get('security'),
+                username: formData.get('username'),
+                password: formData.get('password'),
+                from_email: formData.get('from_email'),
+                from_name: formData.get('from_name')
+            });
+            
+            if (result && result.success) {
+                showMessage('SMTP instellingen opgeslagen', 'success');
+            }
+        }
+
+        async function testSMTP() {
+            // This would need a separate test endpoint
+            showMessage('Test e-mail functionaliteit nog niet geïmplementeerd', 'error');
+        }
+
+        // Terms functions
+        async function loadTerms() {
+            try {
+                const response = await fetch('terms.php');
+                const terms = await response.text();
+                
+                if (!termsEditor) {
+                    const container = document.getElementById('terms-editor-container');
+                    container.innerHTML = '<div id="terms-editor"></div>';
+                    termsEditor = new Quill('#terms-editor', {
+                        placeholder: 'Voer hier de licentievoorwaarden in...'
+                    });
+                }
+                
+                termsEditor.setHTML(terms);
+            } catch (error) {
+                document.getElementById('terms-editor-container').innerHTML = 
+                    '<p class="text-center">Fout bij laden van voorwaarden</p>';
+            }
+        }
+
+        async function saveTerms() {
+            if (!termsEditor) return;
+            
+            try {
+                const response = await fetch('terms.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'save',
+                        admin_key: ADMIN_KEY,
+                        content: termsEditor.getHTML()
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('Voorwaarden opgeslagen', 'success');
+                } else {
+                    showMessage('Fout bij opslaan: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Fout bij opslaan van voorwaarden', 'error');
+            }
+        }
+
+        // Table functions
+        function renderTable() {
+            const tbody = document.getElementById('licenses-tbody');
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const pageData = filteredLicenses.slice(start, end);
+            
+            if (pageData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="empty-state"><div class="empty-state-icon"><svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div><h3>Geen licenties gevonden</h3><p>Er zijn geen licenties die voldoen aan je criteria</p></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = pageData.map(license => {
+                const hasEmail = license.customer_email && license.customer_email.trim();
+                const licenseTypeName = licenseTypes[license.license_type] || license.license_type;
+                
+                return `
+                    <tr>
+                        <td><code class="font-mono">${license.license_key}</code></td>
+                        <td><span class="badge blue">${licenseTypeName}</span></td>
+                        <td>${license.customer_name || '-'}</td>
+                        <td>${license.customer_email || '-'}</td>
+                        <td><span class="badge ${license.status === 'active' ? 'green' : 'red'}">${license.status === 'active' ? 'Actief' : 'Inactief'}</span></td>
+                        <td>${formatDateTime(license.created_at)}</td>
+                        <td>${license.expires_at ? formatDateTime(license.expires_at) : '<span class="badge gray">Geen</span>'}</td>
+                        <td>${license.last_checked ? formatDateTime(license.last_checked) : '-'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-secondary" onclick="editLicense('${license.license_key}')" title="Bewerken">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M7 19v-2l7.5-7.5 2 2L9 19H7zm10.5-10.5l2-2-2-2-2 2 2 2z"/>
+                                    </svg>
+                                </button>
+                                ${hasEmail ? `
+                                <button class="btn btn-sm btn-success" onclick="sendLicenseEmail('${license.license_key}')" title="E-mail verzenden">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                                    </svg>
+                                </button>
+                                ` : ''}
+                                <button class="btn btn-sm btn-danger" onclick="deleteLicense('${license.license_key}')" title="Verwijderen">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
             updatePagination();
         }
 
         function updatePagination() {
-            // Calculate pagination
-            totalPages = pageSize === filteredLicenses.length ? 1 : Math.ceil(filteredLicenses.length / pageSize);
-            
-            // Ensure current page is valid
-            if (currentPage > totalPages) currentPage = totalPages;
-            if (currentPage < 1) currentPage = 1;
-            
-            // Get current page items
-            const startIndex = (currentPage - 1) * pageSize;
-            const endIndex = startIndex + pageSize;
-            paginatedLicenses = filteredLicenses.slice(startIndex, endIndex);
-            
-            // Render current page
-            renderLicenses();
-            
-            // Update pagination controls
-            updatePaginationControls();
-        }
-
-        function updatePaginationControls() {
-            // Update info text
-            const startItem = filteredLicenses.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
-            const endItem = Math.min(currentPage * pageSize, filteredLicenses.length);
             const totalItems = filteredLicenses.length;
+            const totalPages = Math.ceil(totalItems / pageSize);
+            const start = (currentPage - 1) * pageSize + 1;
+            const end = Math.min(currentPage * pageSize, totalItems);
             
-            document.getElementById('paginationInfo').textContent = 
-                totalItems === 0 ? 'Geen licenties' : 
-                `${startItem}-${endItem} van ${totalItems} licenties`;
+            document.getElementById('page-info').textContent = `${start}-${end} van ${totalItems}`;
             
-            // Update button states
-            document.getElementById('firstPageBtn').disabled = currentPage === 1;
-            document.getElementById('prevPageBtn').disabled = currentPage === 1;
-            document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
-            document.getElementById('lastPageBtn').disabled = currentPage === totalPages;
+            document.getElementById('prev-btn').disabled = currentPage <= 1;
+            document.getElementById('next-btn').disabled = currentPage >= totalPages;
             
-            // Hide pagination if only one page or no results
-            const paginationControls = document.getElementById('paginationControls');
-            if (totalPages <= 1) {
-                paginationControls.style.display = 'none';
+            // Page numbers
+            const pageNumbers = document.getElementById('page-numbers');
+            pageNumbers.innerHTML = '';
+            
+            if (totalPages <= 7) {
+                for (let i = 1; i <= totalPages; i++) {
+                    pageNumbers.appendChild(createPageButton(i));
+                }
             } else {
-                paginationControls.style.display = 'flex';
-            }
-            
-            // Update page numbers
-            updatePageNumbers();
-        }
-
-        function updatePageNumbers() {
-            const pageNumbersContainer = document.getElementById('pageNumbers');
-            pageNumbersContainer.innerHTML = '';
-            
-            if (totalPages <= 1) return;
-            
-            // Calculate which page numbers to show
-            let startPage = Math.max(1, currentPage - 2);
-            let endPage = Math.min(totalPages, currentPage + 2);
-            
-            // Adjust if we're near the beginning or end
-            if (currentPage <= 3) {
-                endPage = Math.min(5, totalPages);
-            }
-            if (currentPage >= totalPages - 2) {
-                startPage = Math.max(1, totalPages - 4);
-            }
-            
-            // Add first page and ellipsis if needed
-            if (startPage > 1) {
-                addPageNumber(1);
-                if (startPage > 2) {
-                    addEllipsis();
-                }
-            }
-            
-            // Add visible page numbers
-            for (let i = startPage; i <= endPage; i++) {
-                addPageNumber(i);
-            }
-            
-            // Add ellipsis and last page if needed
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) {
-                    addEllipsis();
-                }
-                addPageNumber(totalPages);
-            }
-        }
-
-        function addPageNumber(pageNum) {
-            const pageNumbersContainer = document.getElementById('pageNumbers');
-            const button = document.createElement('button');
-            button.className = `page-number ${pageNum === currentPage ? 'active' : ''}`;
-            button.textContent = pageNum;
-            button.onclick = () => goToPage(pageNum);
-            pageNumbersContainer.appendChild(button);
-        }
-
-        function addEllipsis() {
-            const pageNumbersContainer = document.getElementById('pageNumbers');
-            const ellipsis = document.createElement('span');
-            ellipsis.className = 'page-ellipsis';
-            ellipsis.textContent = '...';
-            pageNumbersContainer.appendChild(ellipsis);
-        }
-        function updateFilterStats() {
-            document.getElementById('filteredCount').textContent = filteredLicenses.length;
-            document.getElementById('totalCount').textContent = allLicenses.length;
-        }
-
-        // Table Functions
-        function renderLicenses() {
-            const tbody = document.getElementById('licenseTableBody');
-            
-            if (paginatedLicenses.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="empty-state">
-                            <div class="empty-state-icon">
-                                <svg fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                </svg>
-                            </div>
-                            <h3>Geen licenties gevonden</h3>
-                            <p>${filteredLicenses.length === 0 ? 'Er zijn geen licenties die voldoen aan de huidige filters.' : 'Geen resultaten op deze pagina.'}</p>
-                        </td>
-                    </tr>`;
-                return;
-            }
-            
-            tbody.innerHTML = paginatedLicenses.map(license => {
-                const isExpired = license.expires_at && new Date(license.expires_at) < new Date();
-                const statusBadge = getStatusBadge(license.status, isExpired);
+                pageNumbers.appendChild(createPageButton(1));
                 
-                // Build customer display with name and email
-                let customerDisplay = '';
-                if (license.customer_name && license.customer_email) {
-                    customerDisplay = `
-                        <div class="font-semibold">${license.customer_name}</div>
-                        <div class="text-sm text-gray-500">${license.customer_email}</div>
-                    `;
-                } else if (license.customer_name) {
-                    customerDisplay = `<div class="font-semibold">${license.customer_name}</div>`;
-                } else if (license.customer_email) {
-                    customerDisplay = `<div class="font-semibold">${license.customer_email}</div>`;
-                } else {
-                    customerDisplay = '<div class="text-gray-400">Geen gegevens</div>';
+                if (currentPage > 3) {
+                    pageNumbers.appendChild(createEllipsis());
                 }
-
-                return `
-                    <tr>
-                        <td class="font-mono">${license.license_key}</td>
-                        <td>${customerDisplay}</td>
-                        <td><span class="badge ${getTypeBadgeClass(license.license_type)}">${license.license_type}</span></td>
-                        <td>${statusBadge}</td>
-                        <td>${license.expires_at ? formatDateTime(license.expires_at) : 'Nooit'}</td>
-                        <td>${license.last_checked ? formatDateTime(license.last_checked) : 'Nooit'}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button onclick="editLicense('${license.license_key}')" class="btn btn-ghost btn-sm">
-                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M2.695 14.763l-1.262 3.155a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z"/>
-                                    </svg>
-                                </button>
-                                <button onclick="deleteLicense('${license.license_key}')" class="btn btn-danger btn-sm">
-                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>`;
-            }).join('');
+                
+                const start = Math.max(2, currentPage - 1);
+                const end = Math.min(totalPages - 1, currentPage + 1);
+                
+                for (let i = start; i <= end; i++) {
+                    pageNumbers.appendChild(createPageButton(i));
+                }
+                
+                if (currentPage < totalPages - 2) {
+                    pageNumbers.appendChild(createEllipsis());
+                }
+                
+                if (totalPages > 1) {
+                    pageNumbers.appendChild(createPageButton(totalPages));
+                }
+            }
         }
 
-        function sortTable(column) {
-            // Toggle sort direction if same column, otherwise start with asc
-            if (sortColumn === column) {
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                sortColumn = column;
-                sortDirection = 'asc';
+        function createPageButton(page) {
+            const button = document.createElement('button');
+            button.className = 'page-number' + (page === currentPage ? ' active' : '');
+            button.textContent = page;
+            button.onclick = () => goToPage(page);
+            return button;
+        }
+
+        function createEllipsis() {
+            const span = document.createElement('span');
+            span.className = 'page-ellipsis';
+            span.textContent = '...';
+            return span;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderTable();
+        }
+
+        function nextPage() {
+            if (currentPage < Math.ceil(filteredLicenses.length / pageSize)) {
+                currentPage++;
+                renderTable();
             }
-            
-            // Update header indicators
-            document.querySelectorAll('th.sortable').forEach(th => {
-                th.classList.remove('sort-asc', 'sort-desc');
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        }
+
+        function changePageSize() {
+            pageSize = parseInt(document.getElementById('page-size').value);
+            currentPage = 1;
+            renderTable();
+        }
+
+        // Search and filter functions
+        function searchLicenses() {
+            searchTerm = document.getElementById('search-input').value.toLowerCase();
+            applyFilters();
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === filter);
+            });
+            applyFilters();
+        }
+
+        function clearFilters() {
+            currentFilter = 'all';
+            searchTerm = '';
+            document.getElementById('search-input').value = '';
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === 'all');
+            });
+            applyFilters();
+        }
+
+        function applyFilters() {
+            filteredLicenses = currentLicenses.filter(license => {
+                // Search filter
+                if (searchTerm) {
+                    const searchFields = [
+                        license.license_key,
+                        license.customer_name || '',
+                        license.customer_email || '',
+                        licenseTypes[license.license_type] || license.license_type
+                    ];
+                    
+                    if (!searchFields.some(field => field.toLowerCase().includes(searchTerm))) {
+                        return false;
+                    }
+                }
+                
+                // Status filter
+                if (currentFilter !== 'all') {
+                    if (currentFilter === 'expired') {
+                        if (!license.expires_at || new Date(license.expires_at) > new Date()) {
+                            return false;
+                        }
+                    } else if (currentFilter !== license.status) {
+                        return false;
+                    }
+                }
+                
+                return true;
             });
             
-            const currentHeader = document.querySelector(`th[onclick="sortTable('${column}')"]`);
-            currentHeader.classList.add(sortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
-            
-            // Sort the filtered licenses
+            // Sort
             filteredLicenses.sort((a, b) => {
-                let aVal, bVal;
+                let aVal = a[sortColumn] || '';
+                let bVal = b[sortColumn] || '';
                 
-                switch (column) {
-                    case 'license_key':
-                        aVal = a.license_key || '';
-                        bVal = b.license_key || '';
-                        break;
-                    case 'customer':
-                        aVal = a.customer_name || a.customer_email || '';
-                        bVal = b.customer_name || b.customer_email || '';
-                        break;
-                    case 'license_type':
-                        aVal = a.license_type || '';
-                        bVal = b.license_type || '';
-                        break;
-                    case 'status':
-                        aVal = getStatusForSort(a);
-                        bVal = getStatusForSort(b);
-                        break;
-                    case 'expires_at':
-                        aVal = a.expires_at ? new Date(a.expires_at) : new Date('9999-12-31');
-                        bVal = b.expires_at ? new Date(b.expires_at) : new Date('9999-12-31');
-                        break;
-                    case 'last_checked':
-                        aVal = a.last_checked ? new Date(a.last_checked) : new Date('1970-01-01');
-                        bVal = b.last_checked ? new Date(b.last_checked) : new Date('1970-01-01');
-                        break;
-                    default:
-                        return 0;
+                if (sortColumn === 'created_at' || sortColumn === 'expires_at' || sortColumn === 'last_checked') {
+                    aVal = new Date(aVal || 0);
+                    bVal = new Date(bVal || 0);
+                } else if (sortColumn === 'license_type') {
+                    aVal = licenseTypes[aVal] || aVal;
+                    bVal = licenseTypes[bVal] || bVal;
                 }
                 
                 if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
@@ -1069,158 +1260,115 @@
                 return 0;
             });
             
-            // Reset to first page after sorting and update pagination
             currentPage = 1;
-            updatePagination();
+            renderTable();
         }
 
-        // Helper Functions
-        function getStatusForSort(license) {
-            const isExpired = license.expires_at && new Date(license.expires_at) < new Date();
-            if (isExpired) return 'expired';
-            return license.status || 'active';
-        }
-
-        function getStatusBadge(status, isExpired) {
-            if (isExpired) {
-                return '<span class="badge red">Verlopen</span>';
+        function sortTable(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
             }
             
-            switch (status) {
-                case 'active':
-                    return '<span class="badge green">Actief</span>';
-                case 'inactive':
-                    return '<span class="badge red">Inactief</span>';
-                default:
-                    return '<span class="badge gray">Onbekend</span>';
-            }
-        }
-
-        function getTypeBadgeClass(type) {
-            switch (type) {
-                case 'trial': return 'yellow';
-                case 'standard': return 'blue';
-                case 'premium': return 'green';
-                case 'enterprise': return 'blue';
-                default: return 'gray';
-            }
-        }
-
-        function formatDateTime(dateString) {
-            if (!dateString) return 'Nooit';
-            const date = new Date(dateString);
-            return date.toLocaleString('nl-NL', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-
-        function updateStatistics() {
-            let active = 0, inactive = 0, expired = 0;
-            
-            allLicenses.forEach(license => {
-                const isExpired = license.expires_at && new Date(license.expires_at) < new Date();
-                
-                if (isExpired) {
-                    expired++;
-                } else if (license.status === 'active') {
-                    active++;
-                } else {
-                    inactive++;
+            // Update sort indicators
+            document.querySelectorAll('#licenses-table th.sortable').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+                if (th.dataset.column === column) {
+                    th.classList.add('sort-' + sortDirection);
                 }
             });
             
-            document.getElementById('activeLicenses').textContent = active;
-            document.getElementById('inactiveLicenses').textContent = inactive;
-            document.getElementById('expiredLicenses').textContent = expired;
-            document.getElementById('totalLicenses').textContent = allLicenses.length;
+            applyFilters();
         }
 
-        function showMessage(element, message, type) {
-            element.className = `message ${type}`;
-            element.innerHTML = `
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                    ${type === 'success' ? 
-                        '<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>' : 
-                        '<path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+        // Modal functions
+        function editLicense(licenseKey) {
+            editingLicenseKey = licenseKey;
+            const license = currentLicenses.find(l => l.license_key === licenseKey);
+            
+            if (license) {
+                document.getElementById('edit-license-key').value = license.license_key;
+                document.getElementById('edit-license-type').value = license.license_type;
+                document.getElementById('edit-status').value = license.status;
+                document.getElementById('edit-customer-name').value = license.customer_name || '';
+                document.getElementById('edit-customer-email').value = license.customer_email || '';
+                document.getElementById('edit-expires-at').value = license.expires_at ? formatDateTimeInput(license.expires_at) : '';
+                document.getElementById('edit-notes').value = license.notes || '';
+                
+                document.getElementById('edit-modal').classList.add('show');
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('show');
+            editingLicenseKey = null;
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('delete-modal').classList.remove('show');
+            deletingLicenseKey = null;
+        }
+
+        // Utility functions
+        function updateDashboardStats() {
+            const now = new Date();
+            const stats = {
+                active: 0,
+                inactive: 0,
+                expired: 0,
+                total: currentLicenses.length
+            };
+            
+            currentLicenses.forEach(license => {
+                if (license.status === 'active') {
+                    if (license.expires_at && new Date(license.expires_at) < now) {
+                        stats.expired++;
+                    } else {
+                        stats.active++;
                     }
-                </svg>
-                ${message}
-            `;
-            element.classList.remove('hidden');
+                } else {
+                    stats.inactive++;
+                }
+            });
+            
+            document.getElementById('active-count').textContent = stats.active;
+            document.getElementById('inactive-count').textContent = stats.inactive;
+            document.getElementById('expired-count').textContent = stats.expired;
+            document.getElementById('total-count').textContent = stats.total;
+        }
+
+        function formatDateTime(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('nl-NL') + ' ' + date.toLocaleTimeString('nl-NL', {hour: '2-digit', minute: '2-digit'});
+        }
+
+        function formatDateTimeInput(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toISOString().slice(0, 16);
+        }
+
+        function showMessage(text, type = 'success') {
+            const message = document.getElementById('message');
+            const messageText = document.getElementById('message-text');
+            
+            message.className = `message ${type}`;
+            messageText.textContent = text;
+            message.classList.remove('hidden');
             
             setTimeout(() => {
-                element.classList.add('hidden');
+                message.classList.add('hidden');
             }, 5000);
-        }
-
-        // Terms Management
-        function loadTerms() {
-            fetch('terms.php')
-            .then(response => response.text())
-            .then(html => {
-                if (termsEditor) {
-                    termsEditor.setHTML(html);
-                }
-            })
-            .catch(error => {
-                console.error('Error loading terms:', error);
-            });
-        }
-
-        function saveTerms() {
-            if (!termsEditor) return;
-            
-            const content = termsEditor.getHTML();
-            const messageEl = document.getElementById('termsMessage');
-            
-            fetch('terms.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'save',
-                    admin_key: adminKey,
-                    content: content
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showMessage(messageEl, 'Licentievoorwaarden opgeslagen', 'success');
-                } else {
-                    showMessage(messageEl, data.error || 'Fout bij opslaan', 'error');
-                }
-            })
-            .catch(error => {
-                showMessage(messageEl, 'Verbindingsfout', 'error');
-            });
-        }
-
-        function previewTerms() {
-            if (!termsEditor) return;
-            
-            const content = termsEditor.getHTML();
-            document.getElementById('termsContent').innerHTML = content;
-            document.getElementById('termsModal').classList.add('show');
-        }
-
-        function closeTermsModal() {
-            document.getElementById('termsModal').classList.remove('show');
         }
 
         // Close modals when clicking outside
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('modal')) {
-                if (e.target.id === 'deleteModal') {
-                    closeDeleteModal();
-                } else if (e.target.id === 'termsModal') {
-                    closeTermsModal();
-                } else if (e.target.id === 'editModal') {
-                    closeEditModal();
-                }
+                if (e.target.id === 'edit-modal') closeEditModal();
+                if (e.target.id === 'delete-modal') closeDeleteModal();
             }
         });
     </script>
