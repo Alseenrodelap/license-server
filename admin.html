@@ -1104,25 +1104,43 @@
         }
 
         async function sendTestEmail() {
-            // Get test email from override field or use default from settings
-            const testEmailOverride = document.getElementById('testEmailInput').value;
-            const testEmailDefault = document.getElementById('testEmailAddress').value;
-            const testEmail = testEmailOverride || testEmailDefault;
-            const adminKey = document.getElementById('adminKey').value;
-            
-            if (!testEmail) {
-                showMessage('Voer een test e-mail adres in of stel een standaard test adres in bij SMTP instellingen', 'error');
-                return;
-            }
-            
-            if (!adminKey) {
-                showMessage('Admin key is vereist', 'error');
-                return;
-            }
-            
-            // Open modal and clear previous log
+            // Open modal first
             openModal('smtpTestLogModal');
             clearSmtpLog();
+            
+            // Get test email addresses with null checks
+            const testEmailAddressElement = document.getElementById('testEmailAddress');
+            const testEmailInputElement = document.getElementById('testEmailInput');
+            
+            if (!testEmailAddressElement) {
+                console.error('Test email address field not found');
+                updateSmtpLog([{
+                    timestamp: new Date().toLocaleTimeString(),
+                    type: 'error',
+                    message: 'Test email address veld niet gevonden in het formulier'
+                }]);
+                return;
+            }
+            
+            // Use override email if provided, otherwise use default test email
+            const testEmailOverride = testEmailInputElement ? testEmailInputElement.value.trim() : '';
+            const defaultTestEmail = testEmailAddressElement.value.trim();
+            const testEmail = testEmailOverride || defaultTestEmail;
+            
+            if (!testEmail) {
+                updateSmtpLog([{
+                    timestamp: new Date().toLocaleTimeString(),
+                    type: 'error',
+                    message: 'Test e-mail adres is vereist'
+                }]);
+                return;
+            }
+            
+            updateSmtpLog([{
+                timestamp: new Date().toLocaleTimeString(),
+                type: 'info',
+                message: `Test e-mail wordt verzonden naar: ${testEmail}`
+            }]);
             
             try {
                 const response = await fetch('index.php', {
@@ -1146,7 +1164,7 @@
                     }
                     showMessage(result.message, 'success');
                     // Clear the override input
-                    document.getElementById('testEmailInput').value = '';
+                    document.getElementById('testEmailOverride').value = '';
                 } else {
                     showMessage(result.error || 'Kon test e-mail niet verzenden', 'error');
                     if (result.log) {
