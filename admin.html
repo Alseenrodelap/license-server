@@ -578,6 +578,36 @@
         </div>
     </div>
 
+    <!-- SMTP Test Log Modal -->
+    <div id="smtpTestLogModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div class="modal-icon" style="background: #dbeafe;">
+                            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24" style="color: #2563eb;">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <h3 style="margin: 0;">SMTP Test Log</h3>
+                    </div>
+                    <button onclick="closeModal('smtpTestLogModal')" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6b7280;">&times;</button>
+                </div>
+                <p style="margin: 0; color: #6b7280;">Live verbindingslog van SMTP test e-mail</p>
+            </div>
+            
+            <div id="smtpLogContainer" style="max-height: 400px; overflow-y: auto; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; font-family: monospace; font-size: 0.875rem;">
+                <div id="smtpLogContent">
+                    <!-- Log entries will be added here -->
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+                <button onclick="closeModal('smtpTestLogModal')" class="btn btn-secondary">Sluiten</button>
+            </div>
+        </div>
+    </div>
+
     <script src="quill.min.js"></script>
     <script>
         // Global variables
@@ -997,12 +1027,91 @@
             }
         }
 
+        // Modal functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = ''; // Restore scrolling
+            }
+        }
+
+        // Clear SMTP log
+        function clearSmtpLog() {
+            const logContent = document.getElementById('smtpLogContent');
+            if (logContent) {
+                logContent.innerHTML = '';
+            }
+        }
+
+        // Add SMTP log entry
+        function updateSmtpLog(entries) {
+            const logContent = document.getElementById('smtpLogContent');
+            if (!logContent) return;
+            
+            entries.forEach(entry => {
+                const logEntry = document.createElement('div');
+                logEntry.style.marginBottom = '0.5rem';
+                logEntry.style.padding = '0.5rem';
+                logEntry.style.borderRadius = '0.25rem';
+                
+                // Color coding based on type
+                let bgColor = '#f3f4f6';
+                let textColor = '#374151';
+                let icon = 'ℹ️';
+                
+                switch(entry.type) {
+                    case 'success':
+                        bgColor = '#dcfce7';
+                        textColor = '#166534';
+                        icon = '✅';
+                        break;
+                    case 'error':
+                        bgColor = '#fee2e2';
+                        textColor = '#991b1b';
+                        icon = '❌';
+                        break;
+                    case 'warning':
+                        bgColor = '#fef3c7';
+                        textColor = '#92400e';
+                        icon = '⚠️';
+                        break;
+                    case 'info':
+                    default:
+                        bgColor = '#dbeafe';
+                        textColor = '#1e40af';
+                        icon = 'ℹ️';
+                        break;
+                }
+                
+                logEntry.style.backgroundColor = bgColor;
+                logEntry.style.color = textColor;
+                logEntry.innerHTML = `<span style="margin-right: 0.5rem;">[${entry.timestamp}]</span>${icon} ${entry.message}`;
+                
+                logContent.appendChild(logEntry);
+            });
+            
+            // Scroll to bottom
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+
         async function sendTestEmail() {
-            const testEmail = document.getElementById('testEmail').value;
+            // Get test email from override field or use default from settings
+            const testEmailOverride = document.getElementById('testEmailOverride').value;
+            const testEmailDefault = document.getElementById('smtpTestEmail').value;
+            const testEmail = testEmailOverride || testEmailDefault;
             const adminKey = document.getElementById('adminKey').value;
             
             if (!testEmail) {
-                showMessage('Voer een test e-mail adres in', 'error');
+                showMessage('Voer een test e-mail adres in of stel een standaard test adres in bij SMTP instellingen', 'error');
                 return;
             }
             
@@ -1010,6 +1119,10 @@
                 showMessage('Admin key is vereist', 'error');
                 return;
             }
+            
+            // Open modal and clear previous log
+            openModal('smtpTestLogModal');
+            clearSmtpLog();
             
             try {
                 const response = await fetch('index.php', {
@@ -1028,10 +1141,17 @@
                 const result = await response.json();
                 
                 if (result.success) {
+                    if (result.log) {
+                        updateSmtpLog(result.log);
+                    }
                     showMessage(result.message, 'success');
-                    document.getElementById('testEmail').value = ''; // Clear the input
+                    // Clear the override input
+                    document.getElementById('testEmailOverride').value = '';
                 } else {
                     showMessage(result.error || 'Kon test e-mail niet verzenden', 'error');
+                    if (result.log) {
+                        updateSmtpLog(result.log);
+                    }
                 }
             } catch (error) {
                 console.error('Error sending test email:', error);
