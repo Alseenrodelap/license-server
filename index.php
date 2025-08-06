@@ -229,7 +229,8 @@ function saveSMTPSettings($input) {
         'username' => $input['username'] ?? '',
         'password' => $input['password'] === '••••••••' ? $currentSettings['password'] : $input['password'] ?? '',
         'from_email' => $input['from_email'] ?? '',
-        'from_name' => $input['from_name'] ?? ''
+        'from_name' => $input['from_name'] ?? '',
+        'test_email' => $input['test_email'] ?? ''
     ];
     
     if ($storage->saveSMTPSettings($settings)) {
@@ -412,7 +413,11 @@ function deleteLicense($input) {
 }
 
 function sendTestEmail($input) {
-    $testEmail = $input['test_email'] ?? '';
+    $storage = new FileStorage();
+    $smtpSettings = $storage->getSMTPSettings();
+    
+    // Use test email from settings if available, otherwise from input
+    $testEmail = $input['test_email'] ?? ($smtpSettings['test_email'] ?? '');
     
     if (empty($testEmail)) {
         http_response_code(400);
@@ -427,11 +432,7 @@ function sendTestEmail($input) {
         return;
     }
     
-    require_once 'file-storage.php';
     require_once 'license-mailer.php';
-    
-    $storage = new FileStorage();
-    $smtpSettings = $storage->getSMTPSettings();
     
     if (!$smtpSettings) {
         http_response_code(500);
@@ -453,13 +454,22 @@ function sendTestEmail($input) {
     $body .= "Met vriendelijke groet,\nHet InnoDIGI License System";
     
     // Send test email using dynamic SMTP settings
-    $mailer = new DynamicSMTPMailer($smtpSettings);
+    $mailer = new DynamicSMTPMailerWithLogging($smtpSettings);
     
-    if ($mailer->sendMail($testEmail, $subject, $body, false)) {
-        echo json_encode(['success' => true, 'message' => 'Test e-mail verzonden naar ' . $testEmail]);
+    $result = $mailer->sendMailWithLogging($testEmail, $subject, $body, false);
+    
+    if ($result['success']) {
+        echo json_encode([
+            'success' => true, 
+            'message' => 'Test e-mail verzonden naar ' . $testEmail,
+            'log' => $result['log']
+        ]);
     } else {
         http_response_code(500);
-        echo json_encode(['error' => 'Kon test e-mail niet verzenden. Controleer SMTP instellingen.']);
+        echo json_encode([
+            'error' => $result['error'] ?? 'Kon test e-mail niet verzenden. Controleer SMTP instellingen.',
+            'log' => $result['log']
+        ]);
     }
 }
 

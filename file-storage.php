@@ -53,7 +53,8 @@ class FileStorage {
                 'username' => 'noreply@innodigi.nl',
                 'password' => '',
                 'from_email' => 'noreply@innodigi.nl',
-                'from_name' => 'InnoDIGI License System'
+                'from_name' => 'InnoDIGI License System',
+                'test_email' => 'support@innodigi.nl'
             ];
             $this->saveSMTPSettings($defaultSMTP);
         }
