@@ -8,7 +8,7 @@ PHP-gebaseerde licentie server voor InnoDIGI applicaties met bestandsopslag.
 
 Verifieer een licentie door een POST-verzoek naar de server te sturen.
 
-**URL:** `https://[uw-domein]/index.php`
+**URL:** `https://license-server.innodigi.nl/index.php`
 
 **Methode:** `POST`
 
