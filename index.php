@@ -133,6 +133,9 @@ function handleAdminAction($input) {
         case 'send_test_email':
             sendTestEmail($input);
             break;
+        case 'verify_login':
+            verifyLogin($input);
+            break;
         default:
             http_response_code(400);
             echo json_encode(['error' => 'Invalid sub action']);
@@ -475,5 +478,11 @@ function sendTestEmail($input) {
 
 function generateLicenseKey() {
     return 'ID-' . strtoupper(bin2hex(random_bytes(4))) . '-' . strtoupper(bin2hex(random_bytes(4)));
+}
+
+function verifyLogin($input) {
+    // Note: admin_key verification already done in handleAdminAction
+    // If we reach this point, the admin key is correct
+    echo json_encode(['success' => true, 'message' => 'Login successful']);
 }
 ?>
