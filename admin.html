@@ -1159,20 +1159,11 @@
             updateSmtpLog([{ type: 'info', message: 'Starting SMTP test to: ' + testEmail }]);
             
             try {
-                const response = await fetch('index.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'admin',
-                        sub_action: 'send_test_email',
-                        admin_key: adminKey,
-                        test_email: testEmail
-                    })
+                const result = await apiCall({
+                  action    : 'admin',
+                  sub_action: 'send_test_email',
+                  test_email: testEmail
                 });
-                
-                const result = await response.json();
                 
                 if (result.success) {
                     if (result.log) {
