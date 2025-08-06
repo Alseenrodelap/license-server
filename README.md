@@ -59,7 +59,7 @@ Verifieer een licentie door een POST-verzoek naar de server te sturen.
 
 **cURL Voorbeeld:**
 ```bash
-curl -X POST https://uw-domein.nl/index.php \
+curl -X POST https://license-server-innodigi.nl/index.php \
   -H "Content-Type: application/json" \
   -d '{"action":"verify","license_key":"ID-12345678-ABCDEFGH"}'
 ```
@@ -68,7 +68,7 @@ curl -X POST https://uw-domein.nl/index.php \
 ```javascript
 async function verifyLicense(licenseKey) {
     try {
-        const response = await fetch('https://uw-domein.nl/index.php', {
+        const response = await fetch('https://license-server-innodigi.nl/index.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
