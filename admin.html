@@ -998,21 +998,20 @@
         }
 
         async function sendTestEmail() {
-            const testEmailOverride = document.getElementById('testEmailInput').value;
+            const testEmail = document.getElementById('testEmail').value;
             const adminKey = document.getElementById('adminKey').value;
+            
+            if (!testEmail) {
+                showMessage('Voer een test e-mail adres in', 'error');
+                return;
+            }
             
             if (!adminKey) {
                 showMessage('Admin key is vereist', 'error');
                 return;
             }
             
-            // Open the log modal and clear previous log
-            openModal('smtpTestLogModal');
-            clearSmtpLog();
-            
             try {
-                updateSmtpLog('Starting SMTP test...', 'info');
-                
                 const response = await fetch('index.php', {
                     method: 'POST',
                     headers: {
@@ -1022,69 +1021,22 @@
                         action: 'admin',
                         sub_action: 'send_test_email',
                         admin_key: adminKey,
-                        test_email: testEmailOverride
+                        test_email: testEmail
                     })
                 });
                 
                 const result = await response.json();
                 
-                // Display the log from the server
-                if (result.log && Array.isArray(result.log)) {
-                    result.log.forEach(logEntry => {
-                        updateSmtpLog(`[${logEntry.timestamp}] ${logEntry.message}`, logEntry.type);
-                    });
-                }
-                
                 if (result.success) {
-                    updateSmtpLog('🎉 Test e-mail succesvol verzonden!', 'success');
                     showMessage(result.message, 'success');
-                    document.getElementById('testEmailInput').value = ''; // Clear the input
+                    document.getElementById('testEmail').value = ''; // Clear the input
                 } else {
-                    updateSmtpLog('❌ Error: ' + (result.error || 'Onbekende fout'), 'error');
                     showMessage(result.error || 'Kon test e-mail niet verzenden', 'error');
                 }
             } catch (error) {
                 console.error('Error sending test email:', error);
-                updateSmtpLog('❌ Network error: ' + error.message, 'error');
                 showMessage('Er ging iets mis bij het verzenden van de test e-mail', 'error');
             }
-        }
-        
-        function clearSmtpLog() {
-            const logContainer = document.getElementById('smtpLogContainer');
-            logContainer.innerHTML = '<div class="log-entry" style="color: #6b7280;">SMTP test gestart...</div>';
-        }
-        
-        function updateSmtpLog(message, type = 'info') {
-            const logContainer = document.getElementById('smtpLogContainer');
-            const logEntry = document.createElement('div');
-            logEntry.className = 'log-entry';
-            
-            // Color coding based on type
-            let color = '#6b7280'; // Default gray
-            switch (type) {
-                case 'success':
-                    color = '#059669'; // Green
-                    break;
-                case 'error':
-                    color = '#dc2626'; // Red
-                    break;
-                case 'warning':
-                    color = '#d97706'; // Orange
-                    break;
-                case 'info':
-                    color = '#2563eb'; // Blue
-                    break;
-            }
-            
-            logEntry.style.color = color;
-            logEntry.style.marginBottom = '0.25rem';
-            logEntry.textContent = message;
-            
-            logContainer.appendChild(logEntry);
-            
-            // Auto-scroll to bottom
-            logContainer.scrollTop = logContainer.scrollHeight;
         }
 
         // Terms functions
