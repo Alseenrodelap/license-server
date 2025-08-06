@@ -435,6 +435,11 @@
                             <label for="smtp-from-name">Van Naam</label>
                             <input type="text" id="smtp-from-name" name="from_name" placeholder="InnoDIGI License System" required>
                         </div>
+                        <div class="form-field">
+                            <label for="testEmailAddress">Test E-mail Adres:</label>
+                            <input type="email" id="testEmailAddress" placeholder="test@example.com">
+                            <div class="form-help">Het emailadres waar test emails naartoe worden gestuurd</div>
+                        </div>
                     </div>
                     <div style="display: flex; gap: 1rem;">
                         <button type="submit" class="btn btn-success">
@@ -1001,6 +1006,7 @@
                 document.getElementById('smtp-password').value = settings.password || '';
                 document.getElementById('smtp-from-email').value = settings.from_email || '';
                 document.getElementById('smtp-from-name').value = settings.from_name || '';
+                document.getElementById('testEmailAddress').value = settings.test_email || '';
             }
         }
 
@@ -1008,6 +1014,8 @@
             e.preventDefault();
             const form = e.target;
             const formData = new FormData(form);
+            
+            const testEmail = document.getElementById('testEmailAddress').value;
             
             const result = await apiCall({
                 action: 'admin',
@@ -1019,7 +1027,8 @@
                 username: formData.get('username'),
                 password: formData.get('password'),
                 from_email: formData.get('from_email'),
-                from_name: formData.get('from_name')
+                from_name: formData.get('from_name'),
+                test_email: testEmail
             });
             
             if (result && result.success) {
@@ -1259,11 +1268,6 @@
                         <td>${formatDateTime(license.created_at)}</td>
                         <td>${license.expires_at ? formatDateTime(license.expires_at) : '<span class="badge gray">Geen</span>'}</td>
                         <td>${license.last_checked ? formatDateTime(license.last_checked) : '-'}</td>
-                                <div class="form-field">
-                                    <label for="testEmailAddress">Test E-mail Adres:</label>
-                                    <input type="email" id="testEmailAddress" placeholder="test@example.com">
-                                    <div class="form-help">Het emailadres waar test emails naartoe worden gestuurd</div>
-                                </div>
                         <td>
                             <div class="action-buttons">
                                 <button class="btn btn-sm btn-secondary" onclick="editLicense('${license.license_key}')" title="Bewerken">
