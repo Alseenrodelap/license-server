@@ -456,6 +456,20 @@
                             Test E-mail
                         </button>
                     </div>
+                    
+                    <div class="form-group" style="border-top: 1px solid #e5e7eb; padding-top: 1.5rem; margin-top: 1.5rem;">
+                        <div class="form-field">
+                            <label for="testEmail">Test E-mail Adres:</label>
+                            <input type="email" id="testEmail" placeholder="test@example.com" required>
+                            <div class="form-help">Voer een e-mail adres in om de SMTP configuratie te testen</div>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-full mt-2" onclick="sendTestEmail()">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            Test E-mail Verzenden
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -1000,6 +1014,26 @@
         async function testSMTP() {
             // This would need a separate test endpoint
             showMessage('Test e-mail functionaliteit nog niet geïmplementeerd', 'error');
+        }
+
+        async function sendTestEmail() {
+            const testEmail = document.getElementById('testEmail').value;
+            if (!testEmail) {
+                showMessage('Voer een geldig e-mail adres in', 'error');
+                return;
+            }
+            
+            const result = await apiCall({
+                action: 'admin',
+                sub_action: 'send_test_email',
+                test_email: testEmail
+            });
+            
+            if (result && result.success) {
+                showMessage('Test e-mail verzonden naar ' + testEmail, 'success');
+            } else {
+                showMessage('Fout bij verzenden test e-mail: ' + (result?.error || 'Onbekende fout'), 'error');
+            }
         }
 
         // Terms functions
