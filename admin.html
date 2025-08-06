@@ -8,7 +8,46 @@
     <link rel="stylesheet" href="quill.css">
 </head>
 <body>
-    <div class="container">
+    <!-- Login Form -->
+    <div id="loginContainer" class="container" style="max-width: 400px; margin: 50px auto;">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-header-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM15.1 8H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                    </svg>
+                </div>
+                <h2>Admin Login</h2>
+                <p>Voer het admin wachtwoord in om toegang te krijgen</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <div class="form-field">
+                        <label for="adminPassword">Admin Wachtwoord</label>
+                        <input type="password" id="adminPassword" required autocomplete="current-password">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                    </svg>
+                    Inloggen
+                </button>
+            </form>
+            
+            <div id="loginError" class="message error hidden">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span id="loginErrorText">Onjuist wachtwoord</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Admin Interface -->
+    <div id="mainContainer" class="container hidden">
         <!-- Header -->
         <div class="header">
             <div class="header-icon">
@@ -18,6 +57,14 @@
             </div>
             <h1>InnoDIGI License Server</h1>
             <p>Beheer van licenties en instellingen</p>
+            
+            <!-- Logout Button -->
+            <button id="logoutBtn" class="btn btn-secondary" style="margin-top: 1rem;">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                </svg>
+                Uitloggen
+            </button>
         </div>
 
         <!-- Navigation -->
@@ -621,9 +668,102 @@
         let licenseTypes = {};
         let editingLicenseKey = null;
         let termsEditor = null;
+        
+        // Authentication state
+        let isAuthenticated = false;
+        let ADMIN_KEY = null;
 
-        // Initialize application
+        // DOM Elements
+        const loginContainer = document.getElementById('loginContainer');
+        const mainContainer = document.getElementById('mainContainer');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Check authentication status on page load
         document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+        });
+
+        // Check if user is already authenticated
+        function checkAuthStatus() {
+            const storedAdminKey = sessionStorage.getItem('adminKey');
+            if (storedAdminKey) {
+                ADMIN_KEY = storedAdminKey;
+                isAuthenticated = true;
+                showMainInterface();
+            } else {
+                showLoginForm();
+            }
+        }
+
+        // Show login form
+        function showLoginForm() {
+            loginContainer.classList.remove('hidden');
+            mainContainer.classList.add('hidden');
+            isAuthenticated = false;
+        }
+
+        // Show main interface
+        function showMainInterface() {
+            loginContainer.classList.add('hidden');
+            mainContainer.classList.remove('hidden');
+            isAuthenticated = true;
+            initializeApp();
+        }
+
+        // Handle login form submission
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const adminPassword = document.getElementById('adminPassword').value;
+            
+            try {
+                const response = await fetch('index.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'admin',
+                        sub_action: 'verify_login',
+                        admin_key: adminPassword
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Store admin key and show main interface
+                    ADMIN_KEY = adminPassword;
+                    sessionStorage.setItem('adminKey', adminPassword);
+                    isAuthenticated = true;
+                    hideMessage(loginError);
+                    showMainInterface();
+                } else {
+                    showMessage(loginError, 'Onjuist wachtwoord');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage(loginError, 'Er is een fout opgetreden bij het inloggen');
+            }
+        });
+
+        // Handle logout
+        logoutBtn.addEventListener('click', function() {
+            sessionStorage.removeItem('adminKey');
+            ADMIN_KEY = null;
+            isAuthenticated = false;
+            showLoginForm();
+        });
+
+        // Get admin key for API calls
+        function getAdminKey() {
+            return ADMIN_KEY || sessionStorage.getItem('adminKey');
+        }
+
+        // Initialize the application after login
+        function initializeApp() {
             loadLicenseTypes().then(() => {
                 loadLicenses();
             });
@@ -672,8 +812,19 @@
                     expiresAtInput.value = d.toISOString().slice(0, 10);
                 }
             });
-        });
+        }
 
+        // Message helper functions
+        function showMessage(element, text) {
+            if (element === loginError) {
+                document.getElementById('loginErrorText').textContent = text;
+            }
+            element.classList.remove('hidden');
+        }
+
+        function hideMessage(element) {
+            element.classList.add('hidden');
+        }
 
         // Show/Hide sections
         function showSection(section) {
@@ -694,16 +845,30 @@
             event.target.classList.add('btn-primary');
         }
 
-        // API Functions
+        // API Functions with admin key
         async function apiCall(data) {
+            const adminKey = getAdminKey();
+            if (!adminKey) {
+                showLoginForm();
+                throw new Error('Not authenticated');
+            }
+            
             try {
                 const response = await fetch('index.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({...data, admin_key: ADMIN_KEY})
+                    body: JSON.stringify({...data, admin_key: adminKey})
                 });
+                
+                if (response.status === 401) {
+                    // Unauthorized - redirect to login
+                    sessionStorage.removeItem('adminKey');
+                    showLoginForm();
+                    throw new Error('Unauthorized');
+                }
+                
                 return await response.json();
             } catch (error) {
                 console.error('API Error:', error);
@@ -733,7 +898,6 @@
                 renderLicenseTypesEditor();     // editorpanelen vullen
             }
         }
-
 
         function populateLicenseTypeSelects() {
             const selects = ['license-type', 'edit-license-type'];
@@ -784,7 +948,6 @@
                 populateLicenseTypeSelects();   // dropdowns direct verversen
             }
         }
-
 
         function removeLicenseType(key) {
             if (confirm('Weet je zeker dat je dit licentietype wilt verwijderen?')) {
@@ -1254,7 +1417,7 @@
                     },
                     body: JSON.stringify({
                         action: 'save',
-                        admin_key: ADMIN_KEY,
+                        admin_key: getAdminKey(),
                         content: termsEditor.getHTML()
                     })
                 });
@@ -1562,7 +1725,6 @@
             if (!dateStr) return '-';
             return new Date(dateStr).toLocaleDateString('nl-NL');   // tijd onderdrukt
         }
-
 
         function formatDateTimeInput(dateStr) {
             if (!dateStr) return '';
